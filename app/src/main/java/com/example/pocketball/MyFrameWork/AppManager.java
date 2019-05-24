@@ -13,7 +13,7 @@ public class AppManager {
     private GameView m_gameview; //main gameview
     private Resources m_resources;  //main gameview의 resources
     public GameState m_gamestate;
-    public Point size = new Point();
+    public Point size = new Point(0,0);
     void setGameView(GameView _gameview){
         m_gameview =_gameview;
     }

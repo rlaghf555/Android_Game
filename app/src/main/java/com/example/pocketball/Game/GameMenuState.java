@@ -1,21 +1,15 @@
 package com.example.pocketball.Game;
 
 import android.graphics.Canvas;
-import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 
-import com.example.pocketball.MyFrameWork.AppManager;
-import com.example.pocketball.MyFrameWork.GraphicObject;
 import com.example.pocketball.MyFrameWork.IState;
-import com.example.pocketball.R;
 
-public class GameStartState implements IState {
-
-    private Background background;
+public class GameMenuState implements IState {
     @Override
     public void Init() {
-        background = new Background(AppManager.getInstance().getBitmap(R.drawable.sampleimage));
+
     }
 
     @Override
@@ -30,7 +24,7 @@ public class GameStartState implements IState {
 
     @Override
     public void Render(Canvas canvas) {
-        background.Draw(canvas);
+
     }
 
     @Override
@@ -40,7 +34,6 @@ public class GameStartState implements IState {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
         return false;
     }
 }

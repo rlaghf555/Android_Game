@@ -2,6 +2,7 @@ package com.example.pocketball.MyFrameWork;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Rect;
 
 public class GraphicObject {
     protected Bitmap m_bitmap;

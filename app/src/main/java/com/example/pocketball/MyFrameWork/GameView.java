@@ -3,6 +3,7 @@ package com.example.pocketball.MyFrameWork;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.view.Display;
 import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
@@ -17,11 +18,9 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
         super(context);
         //키 입력 처리를 받기 위해서
         setFocusable(true);
-
         AppManager.getInstance().setGameView(this);
         AppManager.getInstance().setResources(getResources());
-
-        getHolder().addCallback(this);
+         getHolder().addCallback(this);
         ChangeGameState(new GameStartState());
         m_thread = new GameViewThread(getHolder(), this);
     }
