@@ -8,8 +8,8 @@ public class CollisionManager {
             return true;
         return false;
     }
-    public static boolean CheckPointtoBox(float px, float py, Rect _rt1){
-        if(px > _rt1.left && px < _rt1.right && py <_rt1.top && py> _rt1.bottom)
+    public static boolean CheckPointtoBox(int px, int py, Rect _rt1){
+        if(px > _rt1.left && px < _rt1.right && py >_rt1.top && py< _rt1.bottom)
             return true;
         return false;
     }
