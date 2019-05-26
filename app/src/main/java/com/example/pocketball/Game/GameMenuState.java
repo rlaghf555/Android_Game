@@ -56,7 +56,7 @@ public class GameMenuState implements IState {
 
         if(CollisionManager.CheckPointtoBox(_x,_y,gamestart.m_rect)){
            // AppManager.getInstance().getGameView().ChangeGameState(new GameLevelstate);  //레벨들 여러개 보이는 state로 넘어감
-
+            AppManager.getInstance().getGameView().ChangeGameState(new GameState());
 
         }
         if(CollisionManager.CheckPointtoBox(_x,_y,mapeditor.m_rect)){
