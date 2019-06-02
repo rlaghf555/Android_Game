@@ -2,10 +2,13 @@ package com.example.pocketball.MyFrameWork;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.graphics.Rect;
 
 public class GraphicObject {
     protected Bitmap m_bitmap;
+    private Bitmap bufferbitmap;
+    protected float rotate;
     protected int m_x;
     protected int m_y;
     public GraphicObject(Bitmap bitmap){
@@ -14,11 +17,17 @@ public class GraphicObject {
         m_y=0;
     }
     public void Draw(Canvas canvas){
+        canvas.save();
+        canvas.rotate(rotate, m_x,m_y);
         canvas.drawBitmap(m_bitmap,m_x,m_y,null);
+        canvas.restore();
     }
     public void SetPosition(int x,int y){
         m_x=x;
         m_y=y;
+    }
+    public void Rotate(float m_rotate){
+        rotate = m_rotate;
     }
     public int GetX(){
         return m_x;

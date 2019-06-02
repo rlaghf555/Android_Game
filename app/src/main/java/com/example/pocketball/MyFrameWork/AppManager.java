@@ -1,5 +1,6 @@
 package com.example.pocketball.MyFrameWork;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -14,6 +15,7 @@ public class AppManager {
     private Resources m_resources;  //main gameview의 resources
     public GameState m_gamestate;
     public Point size = new Point(0,0);
+    public Context context;
     void setGameView(GameView _gameview){
         m_gameview =_gameview;
     }

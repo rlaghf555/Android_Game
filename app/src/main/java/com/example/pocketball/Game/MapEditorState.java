@@ -1,5 +1,6 @@
 package com.example.pocketball.Game;
 
+import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Point;
 import android.service.quicksettings.Tile;
@@ -14,6 +15,7 @@ import com.example.pocketball.R;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.FileWriter;
 
 public class MapEditorState implements IState {
@@ -27,7 +29,6 @@ public class MapEditorState implements IState {
     public static final int wallbutton = 2;
     public static final int playerbutton = 3;
     public static final int enemybutton = 4;
-
     private Map map;
     private Button GoBack_Button;
     private Button Tile_Button;
@@ -69,7 +70,9 @@ public class MapEditorState implements IState {
 
         start = new Point(-1,-1);
         end = new Point(-1,-1);
+
     }
+
 
     @Override
     public void Destroy() {
@@ -119,25 +122,59 @@ public class MapEditorState implements IState {
             AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
         }
         if(CollisionManager.CheckPointtoBox(_x,_y,Save_Button.m_rect)){
-            //파일 세이브
-            File write = new File("file.bin");
-            FileOutputStream fos = null;
-            try{
-                fos = new FileOutputStream("file.bin");
-                fos.write(0);
-                //fos.write(map.player.GetX());
-                //fos.write(map.player.GetY());
+            if(System.currentTimeMillis() - m_LastTouch>1000) {
+                m_LastTouch = System.currentTimeMillis();
+                //파일 세이브
+                int fileindex = 0;
+                String filename = "custom" + fileindex+".txt";
+                while(true) {
+                    File file = new File(AppManager.getInstance().context.getFilesDir(),filename);
+                    if (file.exists() == true){
+                        fileindex++;
+                        filename = "custom" + fileindex+".txt";
 
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-
-            if(fos != null){
-                try{
-                    fos.close();
+                    }
+                    else
+                        break;
                 }
-                catch (Exception e){
+                FileOutputStream fos = null;
+                try {
+                    fos = AppManager.getInstance().context.openFileOutput(filename, Context.MODE_PRIVATE);
+                    String s = new String("");
+
+                    s = s + map.player.GetX();
+                    s = s + " ";
+                    s = s + map.player.GetY();
+                    s = s + " ";
+                    for (int i = 0; i < TILE_HEIGHT; i++) {
+                        for (int j = 0; j < TILE_WIDTH; j++) {
+                            s = s + map.tiles[i][j].prop + " ";
+                        }
+                    }
+
+                    s = s + map.Wall_list.size();
+                    for (int i = 0; i < map.Wall_list.size(); i++) {
+                        s = s + " " + map.Wall_list.get(i).start_index.x + " " + map.Wall_list.get(i).start_index.y;
+                        s = s + " " + map.Wall_list.get(i).end_index.x + " " + map.Wall_list.get(i).end_index.y;
+                    }
+
+                    s = s + " "+ map.enemies.size();
+                    for (int i = 0; i < map.enemies.size(); i++) {
+                        s = s + " " + map.enemies.get(i).GetX() + " " + map.enemies.get(i).GetY();
+                    }
+
+                    fos.write(s.getBytes());
+
+                } catch (Exception e) {
                     e.printStackTrace();
+                }
+
+                if (fos != null) {
+                    try {
+                        fos.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

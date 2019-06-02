@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         setContentView(new GameView(this));
-
+        AppManager.getInstance().context=this;
         DisplayMetrics metrics = this.getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;

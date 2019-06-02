@@ -14,6 +14,7 @@ public class GameMenuState implements IState {
     private Background background;
     private Button gamestart;
     private Button mapeditor;
+    float rotate =0.0f;
     @Override
     public void Init() {
         int display_sizeX = AppManager.getInstance().size.x/2;
@@ -34,7 +35,8 @@ public class GameMenuState implements IState {
 
     @Override
     public void Update() {
-
+        gamestart.Rotate(rotate);
+        rotate +=1;
     }
 
     @Override
@@ -55,9 +57,10 @@ public class GameMenuState implements IState {
         int _y = (int) event.getY();
 
         if(CollisionManager.CheckPointtoBox(_x,_y,gamestart.m_rect)){
-           // AppManager.getInstance().getGameView().ChangeGameState(new GameLevelstate);  //레벨들 여러개 보이는 state로 넘어감
-            AppManager.getInstance().getGameView().ChangeGameState(new GameState());
-
+            AppManager.getInstance().getGameView().ChangeGameState(new GameLevelState());  //레벨들 여러개 보이는 state로 넘어감
+           // GameState G = new GameState();
+           // G.stagename = "save.txt";
+           // AppManager.getInstance().getGameView().ChangeGameState(G);
         }
         if(CollisionManager.CheckPointtoBox(_x,_y,mapeditor.m_rect)){
             AppManager.getInstance().getGameView().ChangeGameState(new MapEditorState()); //맵 툴 state로 넘어감

@@ -34,6 +34,9 @@ public class Button extends GraphicObject {
 
     @Override
     public void Draw(Canvas canvas) {
+        canvas.save();
+        canvas.rotate(rotate, m_x,m_y);
         canvas.drawBitmap(m_bitmap,null,m_rect,null);
+        canvas.restore();
     }
 }
