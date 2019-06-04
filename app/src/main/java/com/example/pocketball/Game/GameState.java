@@ -16,11 +16,15 @@ public class GameState implements IState {
     Map map;
     private Button GoBack_Button;
     public String stagename;
+    private Power power;
+
     @Override
     public void Init() {
         map = new Map(false);
         GoBack_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.gobackbuttonsample),map.tile_size,map.tile_size);
         GoBack_Button.SetPosition(map.tile_size/2, map.tile_size/2);
+
+        power = new Power(AppManager.getInstance().getBitmap(R.drawable.power),map.player.GetX(), map.player.GetY(), map.player.radius);
         //임시......
         FileInputStream fis = null;
         try{
@@ -79,18 +83,22 @@ public class GameState implements IState {
 
     @Override
     public void Update() {
-
+        if(power.touchevent == true) {
+            power.Rotate(-power.degree);
+        }
     }
 
     @Override
     public void Render(Canvas canvas) {
         map.Draw(canvas);
         GoBack_Button.Draw(canvas);
+        if(power.touchevent == true) {
+            power.Draw(canvas);
+        }
     }
 
     @Override
     public boolean onKeyDown(int KeyCode, KeyEvent event) {
-
         return false;
     }
 
@@ -101,6 +109,33 @@ public class GameState implements IState {
         if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)){
             AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
         }
-        return false;
+
+        if(event.getAction() == MotionEvent.ACTION_DOWN) {
+            if (CollisionManager.CheckPointtoBox(_x, _y, map.player.m_rect)) {
+                power.SetPosition(map.player.GetX(), map.player.GetY());
+                power.touchevent = true;
+            }
+        }
+
+        if(event.getAction() == MotionEvent.ACTION_MOVE) {
+            if(power.touchevent == true) {
+                float dx = (float)map.player.GetX() - (float)_x;
+                float dy = (float)map.player.GetY() + 10 - (float)_y;
+                double radian = Math.atan(dx / dy);
+                float degree = (float) (57.295779513082323 * 2 * radian);
+
+                power.degree = (int)degree;
+                power.radius = (int)Math.sqrt(Math.pow((float)Math.abs(map.player.GetX() - _x),2) + Math.pow(Math.abs((float)map.player.GetY() - _y),2));
+                power.SetRadius(power.radius);
+            }
+        }
+
+        if(event.getAction() == MotionEvent.ACTION_UP) {
+            power.touchevent = false;
+            // 여기서 radius : 힘
+            // degree : 각도
+            // 여기서 작업하세용~
+        }
+        return true;
     }
 }
