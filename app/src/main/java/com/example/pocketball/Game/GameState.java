@@ -84,7 +84,7 @@ public class GameState implements IState {
     @Override
     public void Update() {
         if(power.touchevent == true) {
-            power.Rotate(-power.degree);
+            power.Rotate(-power.degree + 180);
         }
     }
 
@@ -121,17 +121,21 @@ public class GameState implements IState {
             if(power.touchevent == true) {
                 float dx = (float)map.player.GetX() - (float)_x;
                 float dy = (float)map.player.GetY() + 10 - (float)_y;
-                double radian = Math.atan(dx / dy);
-                float degree = (float) (57.295779513082323 * 2 * radian);
+                //if(dx < 0) dx = -dx;
+                //if(dy < 0) dy = -dy;
+                double radian = Math.atan2(dx ,dy);
+                float degree = (float) (180 / Math.PI * radian);
 
                 power.degree = (int)degree;
                 power.radius = (int)Math.sqrt(Math.pow((float)Math.abs(map.player.GetX() - _x),2) + Math.pow(Math.abs((float)map.player.GetY() - _y),2));
+                if(power.radius > 200) power.radius = 200;
                 power.SetRadius(power.radius);
             }
         }
 
         if(event.getAction() == MotionEvent.ACTION_UP) {
             power.touchevent = false;
+            power.radius = 10;
             // 여기서 radius : 힘
             // degree : 각도
             // 여기서 작업하세용~

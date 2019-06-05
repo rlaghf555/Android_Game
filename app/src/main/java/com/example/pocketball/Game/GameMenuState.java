@@ -35,8 +35,8 @@ public class GameMenuState implements IState {
 
     @Override
     public void Update() {
-        gamestart.Rotate(rotate);
-        rotate +=1;
+        // gamestart.Rotate(rotate);
+        // rotate +=1;
     }
 
     @Override

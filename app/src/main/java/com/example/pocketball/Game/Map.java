@@ -36,7 +36,7 @@ public class Map {
 
         //이미지 세팅
         Tile_Image = AppManager.getInstance().getBitmap(R.drawable.sampletile);
-        Player_Image = AppManager.getInstance().getBitmap(R.drawable.playersample);
+        Player_Image = AppManager.getInstance().getBitmap(R.drawable.player);
         Enemy_Image = AppManager.getInstance().getBitmap(R.drawable.enemysample);
         tile_size = AppManager.getInstance().size.x / 100 * 80 / 10;        //화면 가로모드 기준 가로 크기 80%에 타일 배치 /10(10개)
         pivotX = AppManager.getInstance().size.x / 2 - tile_size * 4 - tile_size / 2;
