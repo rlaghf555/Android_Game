@@ -31,6 +31,7 @@ public class Map {
     public ArrayList<Wall> Wall_list = new ArrayList<Wall>();
     private Paint wallpaint;
     private boolean Is_Tool = false;
+
     public Map(boolean istool){
         Is_Tool = istool;
 
@@ -120,7 +121,6 @@ public class Map {
             }
         }
         //공(적) 그리기
-
         for(int i=0;i<enemies.size();i++) {
             if (enemies.get(i) != null)
                 enemies.get(i).Draw(canvas);
@@ -138,5 +138,6 @@ public class Map {
         Wall_list.clear();
         enemies.clear();
     }
+
 }
 

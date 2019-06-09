@@ -21,10 +21,12 @@ public class GameStartState implements IState {
     @Override
     public void Destroy() {
 
+
     }
 
     @Override
     public void Update() {
+
 
     }
 

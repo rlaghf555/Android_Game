@@ -17,7 +17,9 @@ public class GameState implements IState {
     private Button GoBack_Button;
     public String stagename;
     private Power power;
-
+    public long g_PrevTime = 0;
+    public float deltaX = 0.f, deltaY = 0.f;
+    public boolean g_ApplyForceBool = false;
     @Override
     public void Init() {
         map = new Map(false);
@@ -82,14 +84,60 @@ public class GameState implements IState {
     }
 
     @Override
-    public void Update() {
-        if(power.touchevent == true) {
+    public void Update() {//다
+        if(power.touchevent == true)
+        {
             power.Rotate(-power.degree + 180);
         }
+        if(g_PrevTime == 0 )
+        {
+            g_PrevTime = System.currentTimeMillis();
+            return;
+        }
+        long CurrentTime = System.currentTimeMillis();
+        long ElapsedTime = CurrentTime - g_PrevTime;
+        g_PrevTime = CurrentTime;
+        float eTime = (float)ElapsedTime / 1000.0f;
+
+        if(g_ApplyForceBool)//ApplyForce to player
+        {
+            float power = 50.f;
+            map.player.ApplyForce(deltaX * power, deltaY * power, eTime);
+            g_ApplyForceBool = false;
+        }
+
+        for (int i = 0; i < map.enemies.size() ; i++)
+        {
+            map.player.BallCollision(map.enemies.get(i), eTime);
+        }
+        for(int i = 0; i < map.enemies.size() - 1;i++)
+        {
+            for(int j = i + 1; j < map.enemies.size();j++) {
+                if(map.enemies.get(i) == null)
+                    continue;
+                if(map.enemies.get(j) == null)
+                    continue;
+                if(map.enemies.get(i) == map.enemies.get(j))
+                    continue;
+                map.enemies.get(i).BallCollision(map.enemies.get(j) , eTime);
+            }
+        }
+        //UpDate
+        map.player.UpDate(eTime);
+        for(int i = 0; i < map.enemies.size(); ++i)
+        {
+            if(map.enemies.get(i) != null)
+            {
+                map.enemies.get(i).UpDate(eTime);
+            }
+        }
+
+        CheckEmptyTileToBall();
     }
 
     @Override
     public void Render(Canvas canvas) {
+
         map.Draw(canvas);
         GoBack_Button.Draw(canvas);
         if(power.touchevent == true) {
@@ -104,6 +152,13 @@ public class GameState implements IState {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        /*if(Math.abs(map.player.m_VelX) > 0.01 || Math.abs(map.player.m_VelY) > 0.01)
+            return true;
+        for(int i = 0; i < map.enemies.size(); ++i)
+        {
+            if(Math.abs(map.enemies.get(i).m_VelX) > 0.01 || Math.abs(map.enemies.get(i).m_VelY) > 0.01)
+                return true;
+        }*/
         int _x = (int)event.getX();
         int _y = (int)event.getY();
         if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)){
@@ -119,11 +174,11 @@ public class GameState implements IState {
 
         if(event.getAction() == MotionEvent.ACTION_MOVE) {
             if(power.touchevent == true) {
-                float dx = (float)map.player.GetX() - (float)_x;
-                float dy = (float)map.player.GetY() + 10 - (float)_y;
+                deltaX = (float)map.player.GetX() - (float)_x;
+                deltaY = (float)map.player.GetY() + 10 - (float)_y;
                 //if(dx < 0) dx = -dx;
                 //if(dy < 0) dy = -dy;
-                double radian = Math.atan2(dx ,dy);
+                double radian = Math.atan2(deltaX ,deltaY);
                 float degree = (float) (180 / Math.PI * radian);
 
                 power.degree = (int)degree;
@@ -135,11 +190,58 @@ public class GameState implements IState {
 
         if(event.getAction() == MotionEvent.ACTION_UP) {
             power.touchevent = false;
-            power.radius = 10;
+            //power.radius = 10;
+            deltaX = (float)map.player.GetX() - (float)_x;
+            deltaY = (float)map.player.GetY() - (float)_y;
+            double len = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY, 2));
+            if(len > 300)
+            {
+                deltaX = deltaX / (float)len * 300.f;
+                deltaY = deltaY / (float)len * 300.f;
+                //System.out.println(deltaX + " " + deltaY);
+            }
+            g_ApplyForceBool = true;
+
+
+
             // 여기서 radius : 힘
             // degree : 각도
             // 여기서 작업하세용~
         }
         return true;
     }
+    public void CheckEmptyTileToBall()
+    {
+        //System.out.println(map.player.GetX() + ",   " +map.player.GetY());
+        for(int i = 0; i < Map.TILE_HEIGHT; ++i)
+        {
+            for(int j = 0; j < Map.TILE_WIDTH; ++j)
+            {
+                if (map.tiles[i][j].prop == Map.TILE_FILL)//안비어있으면 넘어감
+                {
+                    continue;
+                }
+                if(CollisionManager.CheckPointtoBox(map.player.GetX(),map.player.GetY(), map.tiles[i][j].m_rect ))//플레이어 사망
+                {
+                    AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
+                }
+                for(int k = 0; k < map.enemies.size(); ++k)
+                {
+                    if(CollisionManager.CheckPointtoBox(map.enemies.get(k).GetX(),map.enemies.get(k).GetY(), map.tiles[i][j].m_rect))//적 사망
+                    {
+                        map.enemies.remove(map.enemies.get(k));
+                    }
+                }
+            }
+        }
+        //ringoutcheck
+        if(260 > map.player.GetX() || map.player.GetX() > 2150 || 140 > map.player.GetY() || map.player.GetY() > 1260)
+            AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
+        for(int i = 0; i < map.enemies.size(); ++i)
+        {
+            if(260 > map.enemies.get(i).GetX() || map.enemies.get(i).GetX() > 2150 || 140 > map.enemies.get(i).GetY() || map.enemies.get(i).GetY() > 1260)
+                map.enemies.remove(map.enemies.get(i));
+        }
+    }
+
 }
