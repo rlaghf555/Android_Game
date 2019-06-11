@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 
 import com.example.pocketball.MyFrameWork.AppManager;
 import com.example.pocketball.MyFrameWork.CollisionManager;
+import com.example.pocketball.MyFrameWork.GraphicObject;
 import com.example.pocketball.MyFrameWork.IState;
 import com.example.pocketball.R;
 
@@ -29,6 +30,7 @@ public class MapEditorState implements IState {
     public static final int wallbutton = 2;
     public static final int playerbutton = 3;
     public static final int enemybutton = 4;
+    public static final int lifebutton =5;
     private Map map;
     private Button GoBack_Button;
     private Button Tile_Button;
@@ -37,8 +39,11 @@ public class MapEditorState implements IState {
     private Button Enemy_Button;
     private Button Save_Button;
     private Button Reset_Button;
+    private Button Life_Button;
     private Button Add_Button;
     private Button Remove_Button;
+    private Button Heart;
+    private int life=5;
     private int Pressed_Button = playerbutton;
 
     private Point start,end;
@@ -55,16 +60,20 @@ public class MapEditorState implements IState {
         Wall_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.wallsample),map.tile_size,map.tile_size);
         Player_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.playersample),map.tile_size,map.tile_size);
         Enemy_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.enemysample),map.tile_size,map.tile_size);
+        Life_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.lifebutton),map.tile_size,map.tile_size);
         Add_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.plussample),map.tile_size/2,map.tile_size/2);
         Remove_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.gobackbuttonsample),map.tile_size/2,map.tile_size/2);
+        Heart = new Button(AppManager.getInstance().getBitmap(R.drawable.heart),map.tile_size/2,map.tile_size/2);
 
         GoBack_Button.SetPosition(map.tile_size/2, map.tile_size/2);
         Save_Button.SetPosition(map.tile_size/2, AppManager.getInstance().size.y/2);
         Reset_Button.SetPosition(map.tile_size/2, AppManager.getInstance().size.y - map.tile_size/2);
-        Tile_Button.SetPosition(AppManager.getInstance().size.x - map.tile_size/2, AppManager.getInstance().size.y/2 - map.tile_size*2 - map.tile_size/2);
-        Wall_Button.SetPosition(AppManager.getInstance().size.x - map.tile_size/2, AppManager.getInstance().size.y/2 - map.tile_size);
-        Player_Button.SetPosition(AppManager.getInstance().size.x - map.tile_size/2, AppManager.getInstance().size.y/2 + map.tile_size);
-        Enemy_Button.SetPosition(AppManager.getInstance().size.x - map.tile_size/2, AppManager.getInstance().size.y/2 + map.tile_size*2 + map.tile_size/2);
+        Tile_Button.SetPosition(AppManager.getInstance().size.x - map.tile_size/2, AppManager.getInstance().size.y/6 *1);
+        Wall_Button.SetPosition(AppManager.getInstance().size.x - map.tile_size/2, AppManager.getInstance().size.y/6 *2);
+        Player_Button.SetPosition(AppManager.getInstance().size.x - map.tile_size/2, AppManager.getInstance().size.y/6 *3);
+        Enemy_Button.SetPosition(AppManager.getInstance().size.x - map.tile_size/2, AppManager.getInstance().size.y/6 *4);
+        Life_Button.SetPosition(AppManager.getInstance().size.x - map.tile_size/2, AppManager.getInstance().size.y/6 *5);
+
         //Add_Button.SetPosition(AppManager.getInstance().size.x/2,AppManager.getInstance().size.y - map.tile_size);
        // Remove_Button.SetPosition(AppManager.getInstance().size.x/2,AppManager.getInstance().size.y - map.tile_size);
 
@@ -97,13 +106,20 @@ public class MapEditorState implements IState {
         Wall_Button.Draw(canvas);
         Player_Button.Draw(canvas);
         Enemy_Button.Draw(canvas);
-
-
+        Life_Button.Draw(canvas);
+        for(int i = 1;i<=life;i++){
+            Heart.SetPosition(map.pivotX+map.tile_size/2*(i-1)-map.tile_size/4,map.pivotY-map.tile_size);
+            Heart.Draw(canvas);
+        }
         if(Pressed_Button == enemybutton){
             Add_Button.Draw(canvas);
             Remove_Button.Draw(canvas);
         }
         if(Pressed_Button == wallbutton){
+            Remove_Button.Draw(canvas);
+        }
+        if(Pressed_Button == lifebutton){
+            Add_Button.Draw(canvas);
             Remove_Button.Draw(canvas);
         }
 
@@ -162,7 +178,7 @@ public class MapEditorState implements IState {
                     for (int i = 0; i < map.enemies.size(); i++) {
                         s = s + " " + map.enemies.get(i).GetX() + " " + map.enemies.get(i).GetY();
                     }
-
+                    s = s + " " + life;
                     fos.write(s.getBytes());
 
                 } catch (Exception e) {
@@ -195,6 +211,11 @@ public class MapEditorState implements IState {
         }
         if(CollisionManager.CheckPointtoBox(_x,_y,Enemy_Button.m_rect)){
             Pressed_Button = enemybutton;
+            Add_Button.SetPosition(AppManager.getInstance().size.x/2 - map.tile_size/2,AppManager.getInstance().size.y - map.tile_size/3);
+            Remove_Button.SetPosition(AppManager.getInstance().size.x/2 + map.tile_size/2,AppManager.getInstance().size.y - map.tile_size/3);
+        }
+        if(CollisionManager.CheckPointtoBox(_x,_y,Life_Button.m_rect)){
+            Pressed_Button = lifebutton;
             Add_Button.SetPosition(AppManager.getInstance().size.x/2 - map.tile_size/2,AppManager.getInstance().size.y - map.tile_size/3);
             Remove_Button.SetPosition(AppManager.getInstance().size.x/2 + map.tile_size/2,AppManager.getInstance().size.y - map.tile_size/3);
         }
@@ -266,10 +287,34 @@ public class MapEditorState implements IState {
                                 map.enemies.remove(map.enemies.size() - 1);
                         }
                         if (CollisionManager.CheckPointtoBox(_x, _y, Add_Button.m_rect)) {
-                            if (map.enemies.size() < 5)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemysample), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                            if (map.enemies.size() < 5){
+                                if(map.enemies.size()==0)
+                                  map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                                else if(map.enemies.size()==1)
+                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                                else if(map.enemies.size()==2)
+                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                                else if(map.enemies.size()==3)
+                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                                else if(map.enemies.size()==4)
+                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+
+                            }
                         }
                     }
+                break;
+            case lifebutton:
+                if(System.currentTimeMillis() - m_LastTouch>250) {
+                    m_LastTouch = System.currentTimeMillis();
+                    if (CollisionManager.CheckPointtoBox(_x, _y, Remove_Button.m_rect)) {
+                        if (life > 1)
+                            life--;
+                    }
+                    if (CollisionManager.CheckPointtoBox(_x, _y, Add_Button.m_rect)) {
+                        if (life < 10)
+                            life++;
+                    }
+                }
                 break;
         }
         return true;

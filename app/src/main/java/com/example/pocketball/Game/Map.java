@@ -23,7 +23,7 @@ public class Map {
     private Bitmap Player_Image;
     private Bitmap Enemy_Image;
     public int tile_size;              //화면 비율에 따른 화면 사이즈
-    private int pivotX, pivotY;         //타일 좌측상단 PIVOT
+    public int pivotX, pivotY;         //타일 좌측상단 PIVOT
     private Rect tmp_rect;              //그릴때 쓰는 임시Rect
     public Rect[][] touch_point;       //맵툴 벽 생성시 사용할 터치 포인트
     public Ball player;
@@ -61,7 +61,7 @@ public class Map {
             }
             //터치 영역, 벽 좌표 지정 전용
             touch_point = new Rect[TILE_HEIGHT+1][TILE_WIDTH+1];
-            int touch_size = tile_size/5;
+            int touch_size = tile_size/2;
             for(int i=0;i<TILE_HEIGHT+1;i++){
                 for (int j=0;j<TILE_WIDTH+1;j++){
                     touch_point[i][j] = new Rect(0,0,0,0);

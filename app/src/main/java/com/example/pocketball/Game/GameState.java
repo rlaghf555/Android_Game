@@ -15,17 +15,19 @@ import java.io.FileInputStream;
 public class GameState implements IState {
     Map map;
     private Button GoBack_Button;
+    private Button Heart;
     public String stagename;
     private Power power;
     public long g_PrevTime = 0;
     public float deltaX = 0.f, deltaY = 0.f;
     public boolean g_ApplyForceBool = false;
+    public int life = 0;
     @Override
     public void Init() {
         map = new Map(false);
         GoBack_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.gobackbuttonsample),map.tile_size,map.tile_size);
         GoBack_Button.SetPosition(map.tile_size/2, map.tile_size/2);
-
+        Heart = new Button(AppManager.getInstance().getBitmap(R.drawable.heart),map.tile_size/2,map.tile_size/2);
         power = new Power(AppManager.getInstance().getBitmap(R.drawable.power),map.player.GetX(), map.player.GetY(), map.player.radius);
         //임시......
         FileInputStream fis = null;
@@ -62,8 +64,19 @@ public class GameState implements IState {
           //      nextindex+=2;
           //  }
             for(int i=0;i<enemies_size;i++){
-                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemysample),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
+                if(i==0)
+                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
+                else if(i==1)
+                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
+                else if(i==2)
+                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
+                else if(i==3)
+                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
+                else if(i==4)
+                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
+
             }
+            life = Integer.parseInt(array[array_index++]);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -142,6 +155,10 @@ public class GameState implements IState {
         GoBack_Button.Draw(canvas);
         if(power.touchevent == true) {
             power.Draw(canvas);
+        }
+        for(int i = 1;i<=life;i++){
+            Heart.SetPosition(map.pivotX+map.tile_size/2*(i-1)-map.tile_size/4,map.pivotY-map.tile_size);
+            Heart.Draw(canvas);
         }
     }
 
