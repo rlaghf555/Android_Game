@@ -4,11 +4,9 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Point;
 import android.graphics.Rect;
 
 import com.example.pocketball.MyFrameWork.AppManager;
-import com.example.pocketball.MyFrameWork.GraphicObject;
 import com.example.pocketball.R;
 
 import java.util.ArrayList;
@@ -36,7 +34,7 @@ public class Map {
         Is_Tool = istool;
 
         //이미지 세팅
-        Tile_Image = AppManager.getInstance().getBitmap(R.drawable.sampletile);
+        Tile_Image = AppManager.getInstance().getBitmap(R.drawable.tile);
         Player_Image = AppManager.getInstance().getBitmap(R.drawable.player);
         Enemy_Image = AppManager.getInstance().getBitmap(R.drawable.enemysample);
         tile_size = AppManager.getInstance().size.x / 100 * 80 / 10;        //화면 가로모드 기준 가로 크기 80%에 타일 배치 /10(10개)
@@ -46,9 +44,9 @@ public class Map {
 
         //벽 색 지정
         wallpaint = new Paint();
-        wallpaint.setStrokeWidth(15f);
+        wallpaint.setStrokeWidth(20f);
         wallpaint.setStyle(Paint.Style.FILL);
-        wallpaint.setColor(Color.BLACK);
+        wallpaint.setColor(Color.YELLOW);
 
         if(Is_Tool){ //맵툴
             tiles = new Tile[TILE_HEIGHT][TILE_WIDTH];

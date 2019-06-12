@@ -16,6 +16,7 @@ public class GameState implements IState {
     Map map;
     private Button GoBack_Button;
     private Button Heart;
+    private Background Level_Background;
     public String stagename;
     private Power power;
     public long g_PrevTime = 0;
@@ -27,8 +28,9 @@ public class GameState implements IState {
         map = new Map(false);
         GoBack_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.gobackbuttonsample),map.tile_size,map.tile_size);
         GoBack_Button.SetPosition(map.tile_size/2, map.tile_size/2);
-        Heart = new Button(AppManager.getInstance().getBitmap(R.drawable.heart),map.tile_size/2,map.tile_size/2);
+        Heart = new Button(AppManager.getInstance().getBitmap(R.drawable.heart),(int)(map.tile_size*0.7),(int)(map.tile_size*0.7));
         power = new Power(AppManager.getInstance().getBitmap(R.drawable.power),map.player.GetX(), map.player.GetY(), map.player.radius);
+        Level_Background = new Background(AppManager.getInstance().getBitmap(R.drawable.level_background));
         //임시......
         FileInputStream fis = null;
         try{
@@ -150,14 +152,14 @@ public class GameState implements IState {
 
     @Override
     public void Render(Canvas canvas) {
-
+        Level_Background.Draw(canvas);
         map.Draw(canvas);
         GoBack_Button.Draw(canvas);
         if(power.touchevent == true) {
             power.Draw(canvas);
         }
         for(int i = 1;i<=life;i++){
-            Heart.SetPosition(map.pivotX+map.tile_size/2*(i-1)-map.tile_size/4,map.pivotY-map.tile_size);
+            Heart.SetPosition(map.pivotX+map.tile_size/2*(i-1)-map.tile_size/4,map.pivotY-(int)(map.tile_size * 0.5));
             Heart.Draw(canvas);
         }
     }

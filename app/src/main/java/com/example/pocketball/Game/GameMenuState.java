@@ -19,13 +19,12 @@ public class GameMenuState implements IState {
     public void Init() {
         int display_sizeX = AppManager.getInstance().size.x/2;
         int display_sizeY = AppManager.getInstance().size.y/2;
-        background = new Background(AppManager.getInstance().getBitmap(R.drawable.sampleimage));
-        gamestart = new Button(AppManager.getInstance().getBitmap(R.drawable.gamestartsample),display_sizeX/2,display_sizeY/2);
-        mapeditor = new Button(AppManager.getInstance().getBitmap(R.drawable.mapeditorsample),display_sizeX/2,display_sizeY/2);
+        background = new Background(AppManager.getInstance().getBitmap(R.drawable.title));
+        gamestart = new Button(AppManager.getInstance().getBitmap(R.drawable.title_select_1),(int)(display_sizeX*0.6),(int)(display_sizeY*0.3));
+        mapeditor = new Button(AppManager.getInstance().getBitmap(R.drawable.title_select_2),(int)(display_sizeX*0.6),(int)(display_sizeY*0.3));
 
-
-        gamestart.SetPosition(display_sizeX,display_sizeY);
-        mapeditor.SetPosition(display_sizeX,display_sizeY+display_sizeY/2);
+        gamestart.SetPosition(display_sizeX,display_sizeY + display_sizeY/4);
+        mapeditor.SetPosition(display_sizeX,display_sizeY + (int)(display_sizeY*0.6));
     }
 
     @Override

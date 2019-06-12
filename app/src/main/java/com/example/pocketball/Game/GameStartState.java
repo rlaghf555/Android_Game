@@ -15,7 +15,7 @@ public class GameStartState implements IState {
     private Background background;
     @Override
     public void Init() {
-        background = new Background(AppManager.getInstance().getBitmap(R.drawable.sampleimage));
+        background = new Background(AppManager.getInstance().getBitmap(R.drawable.title));
     }
 
     @Override

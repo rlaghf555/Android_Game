@@ -1,6 +1,5 @@
 package com.example.pocketball.Game;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
 
@@ -17,7 +16,7 @@ public class Tile extends GraphicObject {
     public int tile_size;              //화면 비율에 따른 화면 사이즈
     private int pivotX, pivotY;         //타일 좌측상단 PIVOT
     public Tile() {
-        super(AppManager.getInstance().getBitmap(R.drawable.sampletile));
+        super(AppManager.getInstance().getBitmap(R.drawable.tile));
         prop = 1;
         tile_size = AppManager.getInstance().size.x / 100 * 80 / 10;        //화면 가로모드 기준 가로 크기 80%에 타일 배치 /10(10개)
         pivotX = AppManager.getInstance().size.x / 2 - tile_size * 4 - tile_size / 2;
