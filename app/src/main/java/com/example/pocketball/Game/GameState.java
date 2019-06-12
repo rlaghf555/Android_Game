@@ -114,16 +114,17 @@ public class GameState implements IState {
         g_PrevTime = CurrentTime;
         float eTime = (float)ElapsedTime / 1000.0f;
 
-        if(g_ApplyForceBool)//ApplyForce to player
+        if(g_ApplyForceBool)//ShootPlayer
         {
             float power = 50.f;
             map.player.ApplyForce(deltaX * power, deltaY * power, eTime);
             g_ApplyForceBool = false;
         }
 
+        //BallToBallCollision
         for (int i = 0; i < map.enemies.size() ; i++)
         {
-            map.player.BallCollision(map.enemies.get(i), eTime);
+            map.player.BallToBallCollision(map.enemies.get(i), eTime);
         }
         for(int i = 0; i < map.enemies.size() - 1;i++)
         {
@@ -134,9 +135,10 @@ public class GameState implements IState {
                     continue;
                 if(map.enemies.get(i) == map.enemies.get(j))
                     continue;
-                map.enemies.get(i).BallCollision(map.enemies.get(j) , eTime);
+                map.enemies.get(i).BallToBallCollision(map.enemies.get(j) , eTime);
             }
         }
+
         //UpDate
         map.player.UpDate(eTime);
         for(int i = 0; i < map.enemies.size(); ++i)
@@ -146,7 +148,6 @@ public class GameState implements IState {
                 map.enemies.get(i).UpDate(eTime);
             }
         }
-
         CheckEmptyTileToBall();
     }
 

@@ -19,7 +19,7 @@ public class Ball extends GraphicObject {
         m_y=posy;
         radius = diameter/2;
         m_rect = new Rect(m_x - radius, m_y - radius, m_x + radius, m_y + radius);
-        m_CoefFrict = 5.f;
+        m_CoefFrict = 10.f;
     }
 
     @Override
@@ -92,38 +92,39 @@ public class Ball extends GraphicObject {
         m_AccY = 0.f;
     }
 
-    public void BallCollision(Ball second, float eTime)
+    public void BallToBallCollision(Ball second, float eTime)
     {
         double len = Math.sqrt(Math.pow(this.m_x - second.m_x, 2) + Math.pow(this.m_y - second.m_y, 2));
         if(len < this.radius * 2)
         {
-            float DeltaX, DeltaY;
-            float power = 0.25f;
+            float ForceX, ForceY;
+            float power = 0.15f;
 
             double v1X = ((double)this.m_VelX - (double)second.m_VelX) * 10.0;
             double v1Y = ((double)this.m_VelY - (double)second.m_VelY) * 10.0;
             double v2X = (double)second.m_x - (double)this.m_x;
             double v2Y = (double)second.m_y - (double)this.m_y;
 
-            double cos = ((v1X * v2X) + (v1Y * v2Y)) / (Math.sqrt(Math.pow(v1X, 2) + Math.pow(v1Y, 2)) * Math.sqrt(Math.pow(v2X, 2) + Math.pow(v2Y, 2)));
-            double Force = Math.sqrt(Math.pow(second.m_VelX - this.m_VelX, 2) + Math.pow(second.m_VelY - this.m_VelY, 2));
+            double DeltaNormalX = v2X / len;
+            double DeltaNormalY = v2Y / len;
+            float knockback = ((this.radius * 2) - (float)len) / 2.0f;
 
-            DeltaX = (this.m_x - second.m_x) * power * (float)cos * (float)Force;
-            DeltaY = (this.m_y - second.m_y) * power * (float)cos * (float)Force;
-            float knockback = 0.05f;
-
-            int firstX = (int)((float)this.m_x + ((this.m_x - second.m_x) * knockback));
-            int firstY = (int)((float)this.m_y + ((this.m_y - second.m_y) * knockback));
-            int secondX = (int)((float)second.m_x + ((second.m_x - this.m_x) * knockback));
-            int secondY = (int)((float)second.m_y + ((second.m_y - this.m_y) * knockback));
+            int firstX = (int)((float)this.m_x + (-DeltaNormalX * knockback));
+            int firstY = (int)((float)this.m_y + (-DeltaNormalY * knockback));
+            int secondX = (int)((float)second.m_x + (DeltaNormalX * knockback));
+            int secondY = (int)((float)second.m_y + (DeltaNormalY * knockback));
 
             this.SetPosition(firstX, firstY);
             second.SetPosition(secondX, secondY);
 
-            this.ApplyForce(DeltaX, DeltaY , eTime);
-            second.ApplyForce(-DeltaX, -DeltaY, eTime);
+            double cos = ((v1X * v2X) + (v1Y * v2Y)) / (Math.sqrt(Math.pow(v1X, 2) + Math.pow(v1Y, 2)) * Math.sqrt(Math.pow(v2X, 2) + Math.pow(v2Y, 2)));
+            double Force = Math.sqrt(Math.pow(second.m_VelX - this.m_VelX, 2) + Math.pow(second.m_VelY - this.m_VelY, 2));
+
+            ForceX = (float)-DeltaNormalX * this.radius * 2 * power * (float)cos * (float)Force;
+            ForceY = (float)-DeltaNormalY * this.radius * 2* power * (float)cos * (float)Force;
+
+            this.ApplyForce(ForceX, ForceY , eTime);
+            second.ApplyForce(-ForceX, -ForceY, eTime);
         }
     }
-
-
 }
