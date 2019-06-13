@@ -116,7 +116,7 @@ public class GameState implements IState {
 
         if(g_ApplyForceBool)//ShootPlayer
         {
-            map.player.ApplyForce(deltaX, deltaY, 5.f);
+            map.player.ApplyForce(deltaX, deltaY, 3.f);
             g_ApplyForceBool = false;
         }
 
