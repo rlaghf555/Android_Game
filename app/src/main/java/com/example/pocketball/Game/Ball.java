@@ -98,7 +98,6 @@ public class Ball extends GraphicObject {
         if(len < this.radius * 2)
         {
             float ForceX, ForceY;
-            float power = 0.15f;
 
             double v1X = ((double)this.m_VelX - (double)second.m_VelX) * 10.0;
             double v1Y = ((double)this.m_VelY - (double)second.m_VelY) * 10.0;
@@ -120,11 +119,11 @@ public class Ball extends GraphicObject {
             double cos = ((v1X * v2X) + (v1Y * v2Y)) / (Math.sqrt(Math.pow(v1X, 2) + Math.pow(v1Y, 2)) * Math.sqrt(Math.pow(v2X, 2) + Math.pow(v2Y, 2)));
             double Force = Math.sqrt(Math.pow(second.m_VelX - this.m_VelX, 2) + Math.pow(second.m_VelY - this.m_VelY, 2));
 
-            ForceX = (float)-DeltaNormalX * this.radius * 2 * power * (float)cos * (float)Force;
-            ForceY = (float)-DeltaNormalY * this.radius * 2* power * (float)cos * (float)Force;
+            ForceX = (float)-DeltaNormalX * this.radius * 2 * (float)cos * (float)Force;
+            ForceY = (float)-DeltaNormalY * this.radius * 2 * (float)cos * (float)Force;
 
-            this.ApplyForce(ForceX, ForceY , eTime);
-            second.ApplyForce(-ForceX, -ForceY, eTime);
+            this.ApplyForce(ForceX, ForceY , 0.01f);
+            second.ApplyForce(-ForceX, -ForceY, 0.01f);
         }
     }
 }

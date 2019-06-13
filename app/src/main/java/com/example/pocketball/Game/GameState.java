@@ -116,8 +116,7 @@ public class GameState implements IState {
 
         if(g_ApplyForceBool)//ShootPlayer
         {
-            float power = 50.f;
-            map.player.ApplyForce(deltaX * power, deltaY * power, eTime);
+            map.player.ApplyForce(deltaX, deltaY, 5.f);
             g_ApplyForceBool = false;
         }
 
@@ -136,6 +135,13 @@ public class GameState implements IState {
                 if(map.enemies.get(i) == map.enemies.get(j))
                     continue;
                 map.enemies.get(i).BallToBallCollision(map.enemies.get(j) , eTime);
+            }
+        }
+
+        //BallToWallCollision
+        if(map.Wall_list.size() > 0) {
+            for(int i = 0; i < map.Wall_list.size(); ++i) {
+                map.Wall_list.get(i).BallToWallCollision(map.player);
             }
         }
 

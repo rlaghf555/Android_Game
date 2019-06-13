@@ -24,4 +24,25 @@ public class Wall {
         end.x = pivotX - tile_size/2 + tile_size*m_end.x;
         end.y = pivotY - tile_size/2 + tile_size*m_end.y;
     }
+    public void BallToWallCollision(Ball ball)
+    {
+        //y = Mx + D , (x - A)^2 + (y - B)^2 = T^2
+        double M, D, A, B;
+        if(end.x == start.x) {
+            M = 0.0;
+        }
+        else
+            M = (end.y - start.y) / (end.x - start.x);
+        D = start.y - M * start.x;
+        A = ball.GetX();
+        B = ball.GetY();
+        double a = M + 1;
+        double b = 2 * M * (D - B) - 2 * A;
+        double c = A * A + Math.pow(D - B, 2) - ball.radius * ball.radius;
+
+        double d = b * b - (4 * a * c);
+        if(d >= 0)
+            System.out.println(" Y = " + M + "x + "+ D );
+
+    }
 }
