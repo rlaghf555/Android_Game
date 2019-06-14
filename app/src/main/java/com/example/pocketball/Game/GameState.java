@@ -142,6 +142,8 @@ public class GameState implements IState {
         if(map.Wall_list.size() > 0) {
             for(int i = 0; i < map.Wall_list.size(); ++i) {
                 map.Wall_list.get(i).BallToWallCollision(map.player);
+                for(int j = 0; j < map.enemies.size(); ++j)
+                    map.Wall_list.get(i).BallToWallCollision(map.enemies.get(j));
             }
         }
         map.player.UpDate(eTime);
