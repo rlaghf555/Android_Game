@@ -58,8 +58,10 @@ public class GameView extends SurfaceView implements SurfaceHolder.Callback {
     }
 
     protected void myonDraw(Canvas canvas) {
-        canvas.drawColor(Color.WHITE);
-        m_state.Render(canvas);
+        if(canvas != null) {
+            canvas.drawColor(Color.WHITE);
+            m_state.Render(canvas);
+        }
     }
 
     @Override

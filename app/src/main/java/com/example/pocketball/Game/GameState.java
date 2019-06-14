@@ -144,17 +144,14 @@ public class GameState implements IState {
                 map.Wall_list.get(i).BallToWallCollision(map.player);
             }
         }
-
-        //UpDate
         map.player.UpDate(eTime);
-        for(int i = 0; i < map.enemies.size(); ++i)
-        {
-            if(map.enemies.get(i) != null)
-            {
+        for(int i = 0; i < map.enemies.size(); ++i) {
+            if(map.enemies.get(i) != null) {
                 map.enemies.get(i).UpDate(eTime);
             }
         }
         CheckEmptyTileToBall();
+
     }
 
     @Override
@@ -227,8 +224,6 @@ public class GameState implements IState {
                 //System.out.println(deltaX + " " + deltaY);
             }
             g_ApplyForceBool = true;
-
-
 
             // 여기서 radius : 힘
             // degree : 각도

@@ -9,6 +9,8 @@ public class Wall {
     Point end;
     Point start_index;
     Point end_index;
+    double normalX;
+    double normalY;
     public Wall(Point m_start, Point m_end){
         start = new Point();
         end = new Point();
@@ -23,26 +25,98 @@ public class Wall {
         start.y = pivotY - tile_size/2 + tile_size*m_start.y;
         end.x = pivotX - tile_size/2 + tile_size*m_end.x;
         end.y = pivotY - tile_size/2 + tile_size*m_end.y;
+        double deltaX, deltaY, length;
+        deltaX = end.x - start.x;
+        deltaY = end.y - start.y;
+        length = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+        deltaX = deltaX / length;
+        deltaY = deltaY / length;
+        normalX = -deltaY;
+        normalY = deltaX;
+
     }
-    public void BallToWallCollision(Ball ball)
+    public boolean BallToWallCollision(Ball ball)
     {
-        //y = Mx + D , (x - A)^2 + (y - B)^2 = T^2
-        double M, D, A, B;
-        if(end.x == start.x) {
-            M = 0.0;
-        }
-        else
-            M = (end.y - start.y) / (end.x - start.x);
-        D = start.y - M * start.x;
+        double a, b, c ,A, B, R;
+        double d;
+        R = ball.radius;
         A = ball.GetX();
         B = ball.GetY();
-        double a = M + 1;
-        double b = 2 * M * (D - B) - 2 * A;
-        double c = A * A + Math.pow(D - B, 2) - ball.radius * ball.radius;
+        //(x - a)^2 + (y - b)^2 = r^2
+        if(end.x == start.x) {//x = a꼴
+           double T;
+           T = end.x;
+           a = 1.0;
+           b = -2 * B;
+           c = (T * T) - (2 * T * A) + (A * A) + (B * B) - (R * R);
+           d = b * b - (4 * a * c);
+           if(d < 0)
+               return false;
+           else {
+               double yposp = (-b + Math.sqrt(d)) / (2 * a);
+               double yposm = (-b - Math.sqrt(d)) / (2 * a);
+               if(start.y > end.y) {
+                    if((end.y < yposp && yposp < start.y) || (end.y < yposm && yposm < start.y)) {
+                        ApplyReflectVel(ball, 1.0, 0.0, -start.x);
+                        return true;
+                    }
+               }
+               else {
+                   if((start.y < yposp && yposp < end.y) || (start.y < yposm && yposm < end.y)) {
+                       ApplyReflectVel(ball, 1.0, 0.0, -start.x);
+                       return true;
+                   }
+               }
+           }
+        }
+        else {
+            double M, D;
+            M = (end.y - start.y) / (end.x - start.x);
+            D = start.y - M * start.x;
+            a = M * M + 1;
+            b = 2 * M * (D - B) - 2 * A;
+            c = (A * A) + Math.pow(D - B, 2) - (R * R);
+            d = b * b - (4 * a * c);
+            if(d < 0)
+                return false;
+            else {
+                double xpos = (-b + Math.sqrt(d)) / (2.0 * a);
+                if(start.x > end.x) {
+                    if(end.x < xpos && xpos < start.x) {
+                        ApplyReflectVel(ball, M, -1.0, D);
+                        return true;
+                    }
+                }
+                else {
+                    if(start.x < xpos && xpos < end.x) {
+                        ApplyReflectVel(ball, M, -1.0, D);
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
 
-        double d = b * b - (4 * a * c);
-        if(d >= 0)
-            System.out.println(" Y = " + M + "x + "+ D );
-
+    public void ApplyReflectVel(Ball ball, double a, double b, double c)
+    {
+        double ReflectX = 0.0, ReflectY = 0.0;
+        //내적하기.
+        double cos = (Math.sqrt(Math.pow(ball.m_VelX, 2) + Math.pow(ball.m_VelY, 2)) * Math.sqrt(Math.pow(normalX, 2) + Math.pow(normalY, 2))) / (normalX * ball.m_VelX + normalY * ball.m_VelY);
+        double length = (ball.radius) - Math.abs((a * ball.GetX() + b * ball.GetY() + c) / (Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))));
+        System.out.println(ball.radius + "   " + length);
+        if(cos > 0)//노말 그대로 사용
+        {
+            ReflectX = ball.m_VelX - 2 * (ball.m_VelX * normalX + ball.m_VelY * normalY) * normalX;
+            ReflectY = ball.m_VelY - 2 * (ball.m_VelX * normalX + ball.m_VelY * normalY) * normalY;
+            ball.SetPosition(ball.GetX() - (int)(normalX * length * 2.0), ball.GetY() -(int)(normalY * length* 2.0));
+        }
+        else if (cos <= 0)//노말 반대로 사용
+        {
+            ReflectX = ball.m_VelX - 2 * (ball.m_VelX * -normalX + ball.m_VelY * -normalY) * -normalX;
+            ReflectY = ball.m_VelY - 2 * (ball.m_VelX * -normalX + ball.m_VelY * -normalY) * -normalY;
+            ball.SetPosition(ball.GetX() - (int)(-normalX * length* 2.0), ball.GetY() - (int)(-normalY * length* 2.0));
+        }
+        ball.SetVel((float)ReflectX, (float)ReflectY);
     }
 }
