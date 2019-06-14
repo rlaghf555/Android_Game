@@ -13,6 +13,8 @@ public class Ball extends GraphicObject {
         public float m_AccX, m_AccY;
         public float m_CoefFrict;
         public boolean m_WallCollision;
+        public int tile_i, tile_j;
+        public int save_flag =0;
         //기타 등등 마찰, 어쩌구 저쩌구
         public Ball(Bitmap bitmap,int posx, int posy, int diameter) {   //위치 좌표, 지름
             super(bitmap);
@@ -30,7 +32,11 @@ public class Ball extends GraphicObject {
         m_y = y;
         m_rect.set(m_x - radius, m_y - radius, m_x + radius, m_y + radius);
     }
-
+    public void tile_pos(int i, int j, int flag){
+            tile_i = i;
+            tile_j = j;
+            save_flag = flag;
+    }
     @Override
     public void Draw(Canvas canvas) {
         canvas.drawBitmap(m_bitmap,null,m_rect,null);

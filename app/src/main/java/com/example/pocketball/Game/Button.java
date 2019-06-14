@@ -39,4 +39,8 @@ public class Button extends GraphicObject {
         canvas.drawBitmap(m_bitmap,null,m_rect,null);
         canvas.restore();
     }
+
+    public void ChangeImage(Bitmap bitmap){
+        m_bitmap = bitmap;
+    }
 }

@@ -13,6 +13,8 @@ import com.example.pocketball.R;
 import java.io.FileInputStream;
 
 public class GameState implements IState {
+    public static final int SAVE_T = 1;
+    public static final int SAVE_TP = 2;
     Map map;
     private Button GoBack_Button;
     private Button Heart;
@@ -41,7 +43,15 @@ public class GameState implements IState {
             s = new String(data);
             String[] array = s.split(" ");
             int array_index =0;
-            map.player.SetPosition(Integer.parseInt(array[array_index++]), Integer.parseInt(array[array_index++]));
+            int save_i = Integer.parseInt(array[array_index++]);
+            int save_j = Integer.parseInt(array[array_index++]);
+            int tmpsf = Integer.parseInt(array[array_index++]);
+            if(tmpsf == SAVE_T)
+                 map.player.SetPosition(map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY());
+            else if(tmpsf == SAVE_TP)
+                map.player.SetPosition(map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY());
+
+            map.player.save_flag = tmpsf;
             int index = 2;
             for(int i=0;i<6;i++) {
                 for (int j = 0; j < 10; j++) {
@@ -66,17 +76,34 @@ public class GameState implements IState {
           //      nextindex+=2;
           //  }
             for(int i=0;i<enemies_size;i++){
-                if(i==0)
-                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
-                else if(i==1)
-                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
-                else if(i==2)
-                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
-                else if(i==3)
-                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
-                else if(i==4)
-                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
+                int tmp_sf = Integer.parseInt(array[array_index++]);
+                save_i = Integer.parseInt(array[array_index++]);
+                save_j = Integer.parseInt(array[array_index++]);
+                if(tmp_sf == SAVE_T) {
+                    if (i == 0)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                    else if (i == 1)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                    else if (i == 2)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                    else if (i == 3)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                    else if (i == 4)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                }
+                else if(tmp_sf == SAVE_TP){
+                    if (i == 0)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                    else if (i == 1)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                    else if (i == 2)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                    else if (i == 3)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                    else if (i == 4)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
 
+                }
             }
             life = Integer.parseInt(array[array_index++]);
         }catch (Exception e){
@@ -165,7 +192,7 @@ public class GameState implements IState {
             power.Draw(canvas);
         }
         for(int i = 1;i<=life;i++){
-            Heart.SetPosition(map.pivotX+map.tile_size/2*(i-1)-map.tile_size/4,map.pivotY-(int)(map.tile_size * 0.5));
+            Heart.SetPosition(map.pivotX+map.tile_size/2*(i-1)-map.tile_size/4,map.tile_size/3);
             Heart.Draw(canvas);
         }
     }
@@ -188,6 +215,7 @@ public class GameState implements IState {
         int _y = (int)event.getY();
         if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)){
             AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
+            return true;
         }
 
         if(event.getAction() == MotionEvent.ACTION_DOWN) {
@@ -195,6 +223,7 @@ public class GameState implements IState {
                 power.SetPosition(map.player.GetX(), map.player.GetY());
                 power.touchevent = true;
             }
+            return true;
         }
 
         if(event.getAction() == MotionEvent.ACTION_MOVE) {
@@ -211,6 +240,7 @@ public class GameState implements IState {
                 if(power.radius > 200) power.radius = 200;
                 power.SetRadius(power.radius);
             }
+            return true;
         }
 
         if(event.getAction() == MotionEvent.ACTION_UP) {
@@ -226,7 +256,7 @@ public class GameState implements IState {
                 //System.out.println(deltaX + " " + deltaY);
             }
             g_ApplyForceBool = true;
-
+            return true;
             // 여기서 radius : 힘
             // degree : 각도
             // 여기서 작업하세용~
@@ -247,6 +277,7 @@ public class GameState implements IState {
                 if(CollisionManager.CheckPointtoBox(map.player.GetX(),map.player.GetY(), map.tiles[i][j].m_rect ))//플레이어 사망
                 {
                     AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
+                    break;
                 }
                 for(int k = 0; k < map.enemies.size(); ++k)
                 {
@@ -258,13 +289,13 @@ public class GameState implements IState {
             }
         }
         //ringoutcheck
-        if(260 > map.player.GetX() || map.player.GetX() > 2150 || 140 > map.player.GetY() || map.player.GetY() > 1260)
-            AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
-        for(int i = 0; i < map.enemies.size(); ++i)
-        {
-            if(260 > map.enemies.get(i).GetX() || map.enemies.get(i).GetX() > 2150 || 140 > map.enemies.get(i).GetY() || map.enemies.get(i).GetY() > 1260)
-                map.enemies.remove(map.enemies.get(i));
-        }
+       if(map.map_rect.left > map.player.GetX() || map.player.GetX() > map.map_rect.right || map.map_rect.top > map.player.GetY() || map.player.GetY() > map.map_rect.bottom)
+           AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
+       for(int i = 0; i < map.enemies.size(); ++i)
+       {
+           if(map.map_rect.left > map.enemies.get(i).GetX() || map.enemies.get(i).GetX() > map.map_rect.right || map.map_rect.top > map.enemies.get(i).GetY() || map.enemies.get(i).GetY() > map.map_rect.bottom)
+               map.enemies.remove(map.enemies.get(i));
+       }
     }
 
 }

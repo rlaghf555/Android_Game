@@ -29,7 +29,7 @@ public class Map {
     public ArrayList<Wall> Wall_list = new ArrayList<Wall>();
     private Paint wallpaint;
     private boolean Is_Tool = false;
-
+    public Rect map_rect;
     public Map(boolean istool){
         Is_Tool = istool;
 
@@ -57,9 +57,10 @@ public class Map {
                     tiles[i][j].SetPosition(i,j);
                 }
             }
+            map_rect = new Rect(tiles[0][0].m_rect.left,tiles[0][0].m_rect.top,tiles[0][9].m_rect.right,tiles[5][0].m_rect.bottom);
             //터치 영역, 벽 좌표 지정 전용
             touch_point = new Rect[TILE_HEIGHT+1][TILE_WIDTH+1];
-            int touch_size = tile_size/2;
+            int touch_size = tile_size/3;
             for(int i=0;i<TILE_HEIGHT+1;i++){
                 for (int j=0;j<TILE_WIDTH+1;j++){
                     touch_point[i][j] = new Rect(0,0,0,0);
@@ -70,6 +71,7 @@ public class Map {
                 }
             }
             player = new Ball(Player_Image,AppManager.getInstance().size.x/2,AppManager.getInstance().size.y/2,tile_size/2);
+            player.tile_pos(3,5,2);
         }
         else{   //맵
             //맵정보(타일,벽) 가져오기
@@ -82,8 +84,22 @@ public class Map {
                     tiles[i][j].SetPosition(i,j);
                 }
             }
+            map_rect = new Rect(tiles[0][0].m_rect.left,tiles[0][0].m_rect.top,tiles[0][9].m_rect.right,tiles[5][0].m_rect.bottom);
+
+            touch_point = new Rect[TILE_HEIGHT+1][TILE_WIDTH+1];
+            int touch_size = tile_size/3;
+            for(int i=0;i<TILE_HEIGHT+1;i++){
+                for (int j=0;j<TILE_WIDTH+1;j++){
+                    touch_point[i][j] = new Rect(0,0,0,0);
+                    touch_point[i][j].left = pivotX - tile_size / 2 - touch_size + tile_size*j;
+                    touch_point[i][j].top = pivotY - tile_size / 2 - touch_size + tile_size*i;
+                    touch_point[i][j].right = pivotX - tile_size / 2 + touch_size + tile_size*j;
+                    touch_point[i][j].bottom = pivotY - tile_size / 2 + touch_size + tile_size*i;
+                }
+            }
             //공(플레이어)위치 가져오기
             player = new Ball(Player_Image,AppManager.getInstance().size.x/2,AppManager.getInstance().size.y/2,tile_size/2);
+            player.tile_pos(3,5,2);
             //공(적) 위치 가져오기
         }
 
