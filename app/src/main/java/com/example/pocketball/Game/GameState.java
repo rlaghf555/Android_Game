@@ -25,14 +25,32 @@ public class GameState implements IState {
     public float deltaX = 0.f, deltaY = 0.f;
     public boolean g_ApplyForceBool = false;
     public int life = 0;
+    private Button Stage_clear;
+    private Button Stage_fail;
+    private Button Stage_clear_button;
+    private Button Stage_fail_button;
+    private boolean Stage_clear_flag = true;
+    private boolean Stage_fail_flag = false;
+
     @Override
     public void Init() {
+        int display_sizeX = AppManager.getInstance().size.x/2;
+        int display_sizeY = AppManager.getInstance().size.y/2;
         map = new Map(false);
         GoBack_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.gobackbuttonsample),map.tile_size,map.tile_size);
         GoBack_Button.SetPosition(map.tile_size/2, map.tile_size/2);
         Heart = new Button(AppManager.getInstance().getBitmap(R.drawable.heart),(int)(map.tile_size*0.7),(int)(map.tile_size*0.7));
         power = new Power(AppManager.getInstance().getBitmap(R.drawable.power),map.player.GetX(), map.player.GetY(), map.player.radius);
         Level_Background = new Background(AppManager.getInstance().getBitmap(R.drawable.level_background));
+        Stage_clear = new Button(AppManager.getInstance().getBitmap(R.drawable.stage_clear),(int)(display_sizeX*1.2),(int)(display_sizeY*1.2));
+        Stage_clear.SetPosition(display_sizeX,display_sizeY);
+        Stage_fail = new Button(AppManager.getInstance().getBitmap(R.drawable.stage_fail),(int)(display_sizeX*1.2),(int)(display_sizeY*1.2));
+        Stage_fail.SetPosition(display_sizeX,display_sizeY);
+        Stage_clear_button = new Button(AppManager.getInstance().getBitmap(R.drawable.stage_clear_button),(int)(display_sizeX*0.25),(int)(display_sizeY*0.17));
+        Stage_clear_button.SetPosition(display_sizeX,display_sizeY + (int)(display_sizeY * 0.4));
+        Stage_fail_button = new Button(AppManager.getInstance().getBitmap(R.drawable.stage_fail_button),(int)(display_sizeX*0.25),(int)(display_sizeY*0.17));
+        Stage_fail_button.SetPosition(display_sizeX,display_sizeY + (int)(display_sizeY * 0.4));
+
         //임시......
         FileInputStream fis = null;
         try{
@@ -195,6 +213,14 @@ public class GameState implements IState {
             Heart.SetPosition(map.pivotX+map.tile_size/2*(i-1)-map.tile_size/4,map.tile_size/3);
             Heart.Draw(canvas);
         }
+        if(Stage_clear_flag == true){
+            Stage_clear.Draw(canvas);
+            Stage_clear_button.Draw(canvas);
+        }
+        if(Stage_fail_flag == true){
+            Stage_fail.Draw(canvas);
+            Stage_fail_button.Draw(canvas);
+        }
     }
 
     @Override
@@ -204,13 +230,6 @@ public class GameState implements IState {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        /*if(Math.abs(map.player.m_VelX) > 0.01 || Math.abs(map.player.m_VelY) > 0.01)
-            return true;
-        for(int i = 0; i < map.enemies.size(); ++i)
-        {
-            if(Math.abs(map.enemies.get(i).m_VelX) > 0.01 || Math.abs(map.enemies.get(i).m_VelY) > 0.01)
-                return true;
-        }*/
         int _x = (int)event.getX();
         int _y = (int)event.getY();
         if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)){
@@ -230,8 +249,6 @@ public class GameState implements IState {
             if(power.touchevent == true) {
                 deltaX = (float)map.player.GetX() - (float)_x;
                 deltaY = (float)map.player.GetY() + 10 - (float)_y;
-                //if(dx < 0) dx = -dx;
-                //if(dy < 0) dy = -dy;
                 double radian = Math.atan2(deltaX ,deltaY);
                 float degree = (float) (180 / Math.PI * radian);
 
@@ -245,7 +262,6 @@ public class GameState implements IState {
 
         if(event.getAction() == MotionEvent.ACTION_UP) {
             power.touchevent = false;
-            //power.radius = 10;
             deltaX = (float)map.player.GetX() - (float)_x;
             deltaY = (float)map.player.GetY() - (float)_y;
             double len = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY, 2));
@@ -253,19 +269,14 @@ public class GameState implements IState {
             {
                 deltaX = deltaX / (float)len * 300.f;
                 deltaY = deltaY / (float)len * 300.f;
-                //System.out.println(deltaX + " " + deltaY);
             }
             g_ApplyForceBool = true;
             return true;
-            // 여기서 radius : 힘
-            // degree : 각도
-            // 여기서 작업하세용~
         }
         return true;
     }
     public void CheckEmptyTileToBall()
     {
-        //System.out.println(map.player.GetX() + ",   " +map.player.GetY());
         for(int i = 0; i < Map.TILE_HEIGHT; ++i)
         {
             for(int j = 0; j < Map.TILE_WIDTH; ++j)
