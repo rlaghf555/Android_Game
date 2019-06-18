@@ -29,7 +29,7 @@ public class GameState implements IState {
     private Button Stage_fail;
     private Button Stage_clear_button;
     private Button Stage_fail_button;
-    private boolean Stage_clear_flag = true;
+    private boolean Stage_clear_flag = false;
     private boolean Stage_fail_flag = false;
 
     @Override
@@ -145,6 +145,9 @@ public class GameState implements IState {
 
     @Override
     public void Update() {//다
+        if(life <= 0)
+            Stage_fail_flag = true;
+
         if(power.touchevent == true)
         {
             power.Rotate(-power.degree + 180);
@@ -233,45 +236,149 @@ public class GameState implements IState {
         int _x = (int)event.getX();
         int _y = (int)event.getY();
         if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)){
-            AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
-            return true;
+            AppManager.getInstance().getGameView().ChangeGameState(new GameLevelState());
         }
 
-        if(event.getAction() == MotionEvent.ACTION_DOWN) {
-            if (CollisionManager.CheckPointtoBox(_x, _y, map.player.m_rect)) {
-                power.SetPosition(map.player.GetX(), map.player.GetY());
-                power.touchevent = true;
+        if(Stage_clear_flag == true || Stage_fail_flag == true){
+            if(CollisionManager.CheckPointtoBox(_x,_y,Stage_clear_button.m_rect)){
+                Stage_clear_flag = false;
+                Stage_fail_flag = false;
+                // 다음스테이지로
             }
-            return true;
+            if(CollisionManager.CheckPointtoBox(_x,_y,Stage_fail_button.m_rect)){
+                Stage_clear_flag = false;
+                Stage_fail_flag = false;
+                map.enemies.clear();
+                map.Wall_list.clear();
+
+
+                FileInputStream fis = null;
+                try{
+                    fis = AppManager.getInstance().context.openFileInput(stagename);
+                    String s;
+                    byte[] data = new byte[fis.available()];
+                    while (fis.read(data) != -1) {;}
+                    s = new String(data);
+                    String[] array = s.split(" ");
+                    int array_index =0;
+                    int save_i = Integer.parseInt(array[array_index++]);
+                    int save_j = Integer.parseInt(array[array_index++]);
+                    int tmpsf = Integer.parseInt(array[array_index++]);
+                    if(tmpsf == SAVE_T)
+                        map.player.SetPosition(map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY());
+                    else if(tmpsf == SAVE_TP)
+                        map.player.SetPosition(map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY());
+
+                    map.player.save_flag = tmpsf;
+                    int index = 2;
+                    for(int i=0;i<6;i++) {
+                        for (int j = 0; j < 10; j++) {
+                            map.tiles[i][j].prop = Integer.parseInt(array[array_index++]);
+                        }
+                    }
+                    int nextindex =0;
+                    int walllist_size = Integer.parseInt(array[array_index++]);
+                    int tmp_index = array_index;
+                    // for(int i=tmp_index;i<walllist_size+tmp_index;){
+                    //     map.Wall_list.add(new Wall(new Point(Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++])), new Point(Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]))));
+                    //     i+=4;
+                    //     nextindex =array_index+1;
+                    // }
+                    for(int i=0;i<walllist_size;i++){
+                        map.Wall_list.add(new Wall(new Point(Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++])), new Point(Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]))));
+                    }
+
+                    int enemies_size = Integer.parseInt(array[array_index++]);
+                    //  for(int i=nextindex;i<enemies_size+nextindex;){
+                    //      map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemysample),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
+                    //      nextindex+=2;
+                    //  }
+                    for(int i=0;i<enemies_size;i++){
+                        int tmp_sf = Integer.parseInt(array[array_index++]);
+                        save_i = Integer.parseInt(array[array_index++]);
+                        save_j = Integer.parseInt(array[array_index++]);
+                        if(tmp_sf == SAVE_T) {
+                            if (i == 0)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                            else if (i == 1)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                            else if (i == 2)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                            else if (i == 3)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                            else if (i == 4)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                        }
+                        else if(tmp_sf == SAVE_TP){
+                            if (i == 0)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                            else if (i == 1)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                            else if (i == 2)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                            else if (i == 3)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                            else if (i == 4)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+
+                        }
+                    }
+                    life = Integer.parseInt(array[array_index++]);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+
+                if(fis != null){
+                    try{
+                        fis.close();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+                return true;
+            }
         }
-
-        if(event.getAction() == MotionEvent.ACTION_MOVE) {
-            if(power.touchevent == true) {
-                deltaX = (float)map.player.GetX() - (float)_x;
-                deltaY = (float)map.player.GetY() + 10 - (float)_y;
-                double radian = Math.atan2(deltaX ,deltaY);
-                float degree = (float) (180 / Math.PI * radian);
-
-                power.degree = (int)degree;
-                power.radius = (int)Math.sqrt(Math.pow((float)Math.abs(map.player.GetX() - _x),2) + Math.pow(Math.abs((float)map.player.GetY() - _y),2));
-                if(power.radius > 200) power.radius = 200;
-                power.SetRadius(power.radius);
+        else {
+            if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                if (CollisionManager.CheckPointtoBox(_x, _y, map.player.m_rect)) {
+                    power.SetPosition(map.player.GetX(), map.player.GetY());
+                    power.touchevent = true;
+                }
+                return true;
             }
-            return true;
-        }
 
-        if(event.getAction() == MotionEvent.ACTION_UP) {
-            power.touchevent = false;
-            deltaX = (float)map.player.GetX() - (float)_x;
-            deltaY = (float)map.player.GetY() - (float)_y;
-            double len = Math.sqrt(Math.pow(deltaX,2) + Math.pow(deltaY, 2));
-            if(len > 300)
-            {
-                deltaX = deltaX / (float)len * 300.f;
-                deltaY = deltaY / (float)len * 300.f;
+            if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                if (power.touchevent == true) {
+                    deltaX = (float) map.player.GetX() - (float) _x;
+                    deltaY = (float) map.player.GetY() + 10 - (float) _y;
+                    double radian = Math.atan2(deltaX, deltaY);
+                    float degree = (float) (180 / Math.PI * radian);
+
+                    power.degree = (int) degree;
+                    power.radius = (int) Math.sqrt(Math.pow((float) Math.abs(map.player.GetX() - _x), 2) + Math.pow(Math.abs((float) map.player.GetY() - _y), 2));
+                    if (power.radius > 200) power.radius = 200;
+                    power.SetRadius(power.radius);
+                }
             }
-            g_ApplyForceBool = true;
-            return true;
+
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if(power.touchevent ==  true) {
+                    power.touchevent = false;
+                    if (life > 0)
+                        life -= 1;
+
+                    deltaX = (float) map.player.GetX() - (float) _x;
+                    deltaY = (float) map.player.GetY() - (float) _y;
+                    double len = Math.sqrt(Math.pow(deltaX, 2) + Math.pow(deltaY, 2));
+                    if (len > 300) {
+                        deltaX = deltaX / (float) len * 300.f;
+                        deltaY = deltaY / (float) len * 300.f;
+                    }
+                    g_ApplyForceBool = true;
+                    return true;
+                }
+            }
         }
         return true;
     }

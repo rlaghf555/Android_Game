@@ -117,7 +117,7 @@ public class GameLevelState implements IState {
 
         if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)) {
             AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
-            return false;
+
         }
         if(CollisionManager.CheckPointtoBox(_x,_y,select_title.m_rect)){
             if(state ==0)
