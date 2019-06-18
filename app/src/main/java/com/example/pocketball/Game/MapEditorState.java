@@ -11,6 +11,7 @@ import com.example.pocketball.MyFrameWork.AppManager;
 import com.example.pocketball.MyFrameWork.CollisionManager;
 import com.example.pocketball.MyFrameWork.GraphicObject;
 import com.example.pocketball.MyFrameWork.IState;
+import com.example.pocketball.MyFrameWork.SoundManager;
 import com.example.pocketball.R;
 
 import java.io.File;
@@ -52,12 +53,14 @@ public class MapEditorState implements IState {
     private int Pressed_Button = playerbutton;
     private boolean player_move = false;
     private boolean enemy_move = false;
-    private int enemy_num = 0;
+    private int enemy_num = -1;
     private Point start,end;
 
     private long m_LastTouch = System.currentTimeMillis();
     @Override
     public void Init() {
+        if(!SoundManager.getInstance().m_Background.isPlaying())
+            SoundManager.getInstance().m_Background.start();
         map = new Map(true);
 
         GoBack_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.gobackbuttonsample),map.tile_size,map.tile_size);
@@ -143,7 +146,7 @@ public class MapEditorState implements IState {
         int _y = (int)event.getY();
         if(event.getAction()==event.ACTION_UP){
             enemy_move=false;
-            enemy_num =0;
+            enemy_num= -1;
             player_move=false;
         }
         if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)){
@@ -220,6 +223,7 @@ public class MapEditorState implements IState {
         }
         if(CollisionManager.CheckPointtoBox(_x,_y,Reset_Button.m_rect)){
            map.Reset();
+           life =5;
            Pressed_Button = playerbutton;
             return true;
         }
@@ -325,7 +329,8 @@ public class MapEditorState implements IState {
                     }
                 break;
             case enemybutton:
-                if(enemy_move){
+                if(enemy_move && enemy_num!= -1){
+                    if(event.getAction()==event.ACTION_MOVE){
                     for (int i = 0; i < TILE_HEIGHT; i++)
                         for (int j = 0; j < TILE_WIDTH; j++) {
                             if(CollisionManager.CheckPointtoBox(_x,_y,map.tiles[i][j].m_rect)){
@@ -343,15 +348,22 @@ public class MapEditorState implements IState {
                                 break;
                             }
                         }
+                    }
                         return true;
+                }else {
+                    for (int i = 0; i < map.enemies.size(); i++) {
+                        if (CollisionManager.CheckPointtoBox(_x, _y, map.enemies.get(i).m_rect)) {
+                            enemy_move = true;
+                            enemy_num = i;
+                           break;
+                        }
+                        else {
+                            enemy_move = false;
+                            enemy_num = -1;
+
+                        }
+                    }
                 }
-                      for(int i=0;i<map.enemies.size();i++){
-                          if(CollisionManager.CheckPointtoBox(_x,_y,map.enemies.get(i).m_rect)){
-                              enemy_move=true;
-                              enemy_num=i;
-                              return true;
-                          }
-                      }
                     if(System.currentTimeMillis() - m_LastTouch>250) {
                         m_LastTouch = System.currentTimeMillis();
 

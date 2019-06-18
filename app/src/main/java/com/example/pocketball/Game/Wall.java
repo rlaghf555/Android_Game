@@ -1,8 +1,10 @@
 package com.example.pocketball.Game;
 
 import android.graphics.Point;
+import android.support.v4.math.MathUtils;
 
 import com.example.pocketball.MyFrameWork.AppManager;
+import com.example.pocketball.MyFrameWork.SoundManager;
 
 public class Wall {
     Point start;
@@ -104,7 +106,7 @@ public class Wall {
         //내적하기.
         double cos = (Math.sqrt(Math.pow(ball.m_VelX, 2) + Math.pow(ball.m_VelY, 2)) * Math.sqrt(Math.pow(normalX, 2) + Math.pow(normalY, 2))) / (normalX * ball.m_VelX + normalY * ball.m_VelY);
         double length = (ball.radius) - Math.abs((a * ball.GetX() + b * ball.GetY() + c) / (Math.sqrt(Math.pow(a, 2) + Math.pow(b, 2))));
-        System.out.println(ball.radius + "   " + length);
+       // System.out.println(ball.radius + "   " + length);
         if(cos > 0)//노말 그대로 사용
         {
             ReflectX = ball.m_VelX - 2 * (ball.m_VelX * normalX + ball.m_VelY * normalY) * normalX;
@@ -118,5 +120,20 @@ public class Wall {
             ball.SetPosition(ball.GetX() - (int)(-normalX * length* 2.0), ball.GetY() - (int)(-normalY * length* 2.0));
         }
         ball.SetVel((float)ReflectX, (float)ReflectY);
+
+        double pow = Math.sqrt(Math.pow(ReflectX,2)+Math.pow(ReflectY,2));
+        pow/=300;
+        pow =  MathUtils.clamp(pow,0,1);
+        float tmp= ball.GetX()/AppManager.getInstance().size.x;
+        float s_left=0,s_right=0;
+        if(tmp<0.5) {
+            s_left = tmp;
+            s_right = -tmp;
+        }
+        else if(tmp>=0.5){
+            s_left = -tmp;
+            s_right = tmp;
+        }
+        SoundManager.getInstance().play(1,(float)pow+s_left,(float)pow+s_right);
     }
 }

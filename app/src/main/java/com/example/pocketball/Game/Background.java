@@ -16,4 +16,5 @@ public class Background extends GraphicObject {
     public void Draw(Canvas canvas) {
         canvas.drawBitmap(m_bitmap,null,new Rect(0,0, AppManager.getInstance().size.x, AppManager.getInstance().size.y),null);
     }
+
 }

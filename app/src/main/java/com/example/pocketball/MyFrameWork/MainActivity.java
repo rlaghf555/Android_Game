@@ -1,9 +1,12 @@
 package com.example.pocketball.MyFrameWork;
 
 import android.content.pm.ActivityInfo;
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+
+import com.example.pocketball.R;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -22,6 +25,7 @@ public class MainActivity extends AppCompatActivity {
         AppManager.getInstance().size.x=width;
         AppManager.getInstance().size.y=height;
         setContentView(new GameView(this));
-
+        SoundManager.getInstance().Init(this);
+        SoundManager.getInstance().addSound(1,R.raw.ball_sound);
     }
 }

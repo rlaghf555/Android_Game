@@ -3,8 +3,11 @@ package com.example.pocketball.Game;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Rect;
+import android.support.v4.math.MathUtils;
 
+import com.example.pocketball.MyFrameWork.AppManager;
 import com.example.pocketball.MyFrameWork.GraphicObject;
+import com.example.pocketball.MyFrameWork.SoundManager;
 
 public class Ball extends GraphicObject {
         public Rect m_rect;
@@ -15,6 +18,8 @@ public class Ball extends GraphicObject {
         public boolean m_WallCollision;
         public int tile_i, tile_j;
         public int save_flag =0;
+        public boolean draw= true;
+        public boolean moving;
         //기타 등등 마찰, 어쩌구 저쩌구
         public Ball(Bitmap bitmap,int posx, int posy, int diameter) {   //위치 좌표, 지름
             super(bitmap);
@@ -24,6 +29,8 @@ public class Ball extends GraphicObject {
             m_rect = new Rect(m_x - radius, m_y - radius, m_x + radius, m_y + radius);
             m_CoefFrict = 15.f;
             m_WallCollision = false;
+            draw= true;
+            moving = false;
         }
 
     @Override
@@ -66,6 +73,7 @@ public class Ball extends GraphicObject {
         {
             m_VelX = 0.f;
             m_VelY = 0.f;
+            moving = false;
         }
         else
         {
@@ -101,6 +109,22 @@ public class Ball extends GraphicObject {
 
         m_AccX = 0.f;
         m_AccY = 0.f;
+       double pow = Math.sqrt(Math.pow((double)x,2)+Math.pow((double)y,2));
+       pow/=300;
+       pow =  MathUtils.clamp(pow,0,1);
+       MathUtils.clamp(m_x,0,AppManager.getInstance().size.x);
+       float tmp= m_x/AppManager.getInstance().size.x;
+       float s_left=0,s_right=0;
+       if(tmp<0.5) {
+           s_left = tmp;
+           s_right = -tmp;
+       }
+       else if(tmp>=0.5){
+           s_left = -tmp;
+           s_right = tmp;
+     }
+       moving=true;
+       SoundManager.getInstance().play(1,(float)pow+s_left,(float)pow+s_right);
     }
 
     public void BallToBallCollision(Ball second, float eTime)
@@ -136,5 +160,9 @@ public class Ball extends GraphicObject {
             this.ApplyForce(ForceX, ForceY , 0.01f);
             second.ApplyForce(-ForceX, -ForceY, 0.01f);
         }
+    }
+    public double Power(){
+        double pow = Math.sqrt(Math.pow((double)m_VelX,2)+Math.pow((double)m_VelX,2));
+        return pow;
     }
 }

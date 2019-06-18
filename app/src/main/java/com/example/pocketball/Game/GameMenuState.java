@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import com.example.pocketball.MyFrameWork.AppManager;
 import com.example.pocketball.MyFrameWork.CollisionManager;
 import com.example.pocketball.MyFrameWork.IState;
+import com.example.pocketball.MyFrameWork.SoundManager;
 import com.example.pocketball.R;
 
 public class GameMenuState implements IState {
@@ -17,6 +18,8 @@ public class GameMenuState implements IState {
     float rotate =0.0f;
     @Override
     public void Init() {
+        if(!SoundManager.getInstance().m_Background.isPlaying())
+            SoundManager.getInstance().m_Background.start();
         int display_sizeX = AppManager.getInstance().size.x/2;
         int display_sizeY = AppManager.getInstance().size.y/2;
         background = new Background(AppManager.getInstance().getBitmap(R.drawable.title));
@@ -25,6 +28,7 @@ public class GameMenuState implements IState {
 
         gamestart.SetPosition(display_sizeX,display_sizeY + display_sizeY/4);
         mapeditor.SetPosition(display_sizeX,display_sizeY + (int)(display_sizeY*0.6));
+        SoundManager.getInstance().m_Background.start();
     }
 
     @Override

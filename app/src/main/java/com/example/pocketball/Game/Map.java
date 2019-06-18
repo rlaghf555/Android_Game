@@ -140,6 +140,7 @@ public class Map {
                 enemies.get(i).Draw(canvas);
         }
         //공(플레이어) 그리기
+        if(player.draw)
         player.Draw(canvas);
     }
     public void Reset(){

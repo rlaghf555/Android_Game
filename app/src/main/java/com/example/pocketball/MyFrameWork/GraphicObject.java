@@ -7,7 +7,6 @@ import android.graphics.Rect;
 
 public class GraphicObject {
     protected Bitmap m_bitmap;
-    private Bitmap bufferbitmap;
     protected float rotate;
     protected int m_x;
     protected int m_y;
@@ -34,5 +33,8 @@ public class GraphicObject {
     }
     public int GetY(){
         return m_y;
+    }
+    public void delete(){
+        m_bitmap.recycle();
     }
 }

@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import com.example.pocketball.MyFrameWork.AppManager;
 import com.example.pocketball.MyFrameWork.CollisionManager;
 import com.example.pocketball.MyFrameWork.IState;
+import com.example.pocketball.MyFrameWork.SoundManager;
 import com.example.pocketball.R;
 
 import java.io.FileInputStream;
@@ -18,6 +19,10 @@ public class GameState implements IState {
     Map map;
     private Button GoBack_Button;
     private Button Heart;
+    private Button Stage_clear;
+    private Button Stage_fail;
+    private Button Stage_clear_button;
+    private Button Stage_fail_button;
     private Background Level_Background;
     public String stagename;
     private Power power;
@@ -25,15 +30,14 @@ public class GameState implements IState {
     public float deltaX = 0.f, deltaY = 0.f;
     public boolean g_ApplyForceBool = false;
     public int life = 0;
-    private Button Stage_clear;
-    private Button Stage_fail;
-    private Button Stage_clear_button;
-    private Button Stage_fail_button;
+
     private boolean Stage_clear_flag = false;
     private boolean Stage_fail_flag = false;
 
     @Override
     public void Init() {
+        if(!SoundManager.getInstance().m_Background.isPlaying())
+            SoundManager.getInstance().m_Background.start();
         int display_sizeX = AppManager.getInstance().size.x/2;
         int display_sizeY = AppManager.getInstance().size.y/2;
         map = new Map(false);
@@ -145,8 +149,7 @@ public class GameState implements IState {
 
     @Override
     public void Update() {//다
-        if(life <= 0)
-            Stage_fail_flag = true;
+
 
         if(power.touchevent == true)
         {
@@ -202,6 +205,13 @@ public class GameState implements IState {
         }
         CheckEmptyTileToBall();
 
+
+        if(map.player.moving==false){
+            if(map.enemies.size()==0)
+                Stage_clear_flag=true;
+            else if(life ==0)
+                Stage_fail_flag = true;
+        }
     }
 
     @Override
@@ -239,19 +249,21 @@ public class GameState implements IState {
             AppManager.getInstance().getGameView().ChangeGameState(new GameLevelState());
         }
 
-        if(Stage_clear_flag == true || Stage_fail_flag == true){
+        if(Stage_clear_flag == true)
             if(CollisionManager.CheckPointtoBox(_x,_y,Stage_clear_button.m_rect)){
                 Stage_clear_flag = false;
                 Stage_fail_flag = false;
                 // 다음스테이지로
             }
+        if(Stage_fail_flag == true)
             if(CollisionManager.CheckPointtoBox(_x,_y,Stage_fail_button.m_rect)){
                 Stage_clear_flag = false;
                 Stage_fail_flag = false;
                 map.enemies.clear();
                 map.Wall_list.clear();
-
-
+                map.player.m_VelX=0; map.player.m_VelY=0;
+                map.player.draw=true;
+                map.player.moving = false;
                 FileInputStream fis = null;
                 try{
                     fis = AppManager.getInstance().context.openFileInput(stagename);
@@ -338,8 +350,7 @@ public class GameState implements IState {
                 }
                 return true;
             }
-        }
-        else {
+
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 if (CollisionManager.CheckPointtoBox(_x, _y, map.player.m_rect)) {
                     power.SetPosition(map.player.GetX(), map.player.GetY());
@@ -360,6 +371,8 @@ public class GameState implements IState {
                     if (power.radius > 200) power.radius = 200;
                     power.SetRadius(power.radius);
                 }
+                return true;
+
             }
 
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -379,7 +392,7 @@ public class GameState implements IState {
                     return true;
                 }
             }
-        }
+
         return true;
     }
     public void CheckEmptyTileToBall()
@@ -394,7 +407,9 @@ public class GameState implements IState {
                 }
                 if(CollisionManager.CheckPointtoBox(map.player.GetX(),map.player.GetY(), map.tiles[i][j].m_rect ))//플레이어 사망
                 {
-                    AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
+                    map.player.draw=false;
+                    Stage_fail_flag=true;
+                   // AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
                     break;
                 }
                 for(int k = 0; k < map.enemies.size(); ++k)
@@ -402,17 +417,25 @@ public class GameState implements IState {
                     if(CollisionManager.CheckPointtoBox(map.enemies.get(k).GetX(),map.enemies.get(k).GetY(), map.tiles[i][j].m_rect))//적 사망
                     {
                         map.enemies.remove(map.enemies.get(k));
+                        if(k!=0)
+                            Stage_fail_flag=true;
                     }
                 }
             }
         }
         //ringoutcheck
-       if(map.map_rect.left > map.player.GetX() || map.player.GetX() > map.map_rect.right || map.map_rect.top > map.player.GetY() || map.player.GetY() > map.map_rect.bottom)
-           AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
+       if(map.map_rect.left > map.player.GetX() || map.player.GetX() > map.map_rect.right || map.map_rect.top > map.player.GetY() || map.player.GetY() > map.map_rect.bottom){
+          // AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
+           map.player.draw=false;
+           Stage_fail_flag=true;
+       }
        for(int i = 0; i < map.enemies.size(); ++i)
        {
-           if(map.map_rect.left > map.enemies.get(i).GetX() || map.enemies.get(i).GetX() > map.map_rect.right || map.map_rect.top > map.enemies.get(i).GetY() || map.enemies.get(i).GetY() > map.map_rect.bottom)
+           if(map.map_rect.left > map.enemies.get(i).GetX() || map.enemies.get(i).GetX() > map.map_rect.right || map.map_rect.top > map.enemies.get(i).GetY() || map.enemies.get(i).GetY() > map.map_rect.bottom) {
                map.enemies.remove(map.enemies.get(i));
+               if(i!=0)
+                   Stage_fail_flag=true;
+           }
        }
     }
 

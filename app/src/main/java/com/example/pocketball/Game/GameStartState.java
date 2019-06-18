@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import com.example.pocketball.MyFrameWork.AppManager;
 import com.example.pocketball.MyFrameWork.GraphicObject;
 import com.example.pocketball.MyFrameWork.IState;
+import com.example.pocketball.MyFrameWork.SoundManager;
 import com.example.pocketball.R;
 
 import java.io.File;
@@ -52,7 +53,6 @@ public class GameStartState implements IState {
 
     @Override
     public void Destroy() {
-
 
     }
 

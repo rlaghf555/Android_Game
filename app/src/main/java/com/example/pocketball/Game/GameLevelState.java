@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import com.example.pocketball.MyFrameWork.AppManager;
 import com.example.pocketball.MyFrameWork.CollisionManager;
 import com.example.pocketball.MyFrameWork.IState;
+import com.example.pocketball.MyFrameWork.SoundManager;
 import com.example.pocketball.R;
 
 import java.io.File;
@@ -31,6 +32,8 @@ public class GameLevelState implements IState {
     private long m_LastTouch = System.currentTimeMillis();
     @Override
     public void Init() {
+        if(!SoundManager.getInstance().m_Background.isPlaying())
+             SoundManager.getInstance().m_Background.start();
         background = new Background(AppManager.getInstance().getBitmap(R.drawable.level_select_background));
         GoBack_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.gobackbuttonsample),tile_size,tile_size);
         select_title = new Button(AppManager.getInstance().getBitmap(R.drawable.level_select_title),(int)(display_sizeX*0.6),(int)(display_sizeY*0.3));
