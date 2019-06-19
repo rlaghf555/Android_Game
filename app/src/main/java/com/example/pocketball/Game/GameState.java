@@ -103,27 +103,31 @@ public class GameState implements IState {
                 save_j = Integer.parseInt(array[array_index++]);
                 if(tmp_sf == SAVE_T) {
                     if (i == 0)
-                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_1), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
                     else if (i == 1)
-                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_2), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
                     else if (i == 2)
-                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_3), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
                     else if (i == 3)
-                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_4), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
                     else if (i == 4)
-                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_5), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                    else if (i == 5)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_6), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
                 }
                 else if(tmp_sf == SAVE_TP){
                     if (i == 0)
-                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_1), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
                     else if (i == 1)
-                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_2), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
                     else if (i == 2)
-                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_3), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
                     else if (i == 3)
-                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_4), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
                     else if (i == 4)
-                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_5), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                    else if (i == 5)
+                        map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_6), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
 
                 }
             }
@@ -311,27 +315,31 @@ public class GameState implements IState {
                         save_j = Integer.parseInt(array[array_index++]);
                         if(tmp_sf == SAVE_T) {
                             if (i == 0)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_1), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
                             else if (i == 1)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_2), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
                             else if (i == 2)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_3), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
                             else if (i == 3)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_4), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
                             else if (i == 4)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_5), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
+                            else if (i == 5)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_6), map.tiles[save_i][save_j].m_rect.centerX(), map.tiles[save_i][save_j].m_rect.centerY(), map.tile_size / 2));
                         }
                         else if(tmp_sf == SAVE_TP){
                             if (i == 0)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_1), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
                             else if (i == 1)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_2), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
                             else if (i == 2)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_3), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
                             else if (i == 3)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_4), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
                             else if (i == 4)
-                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_5), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
+                            else if (i == 5)
+                                map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_6), map.touch_point[save_i][save_j].centerX(), map.touch_point[save_i][save_j].centerY(), map.tile_size / 2));
 
                         }
                     }

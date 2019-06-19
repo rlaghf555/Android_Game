@@ -373,17 +373,19 @@ public class MapEditorState implements IState {
                                 map.enemies.remove(map.enemies.size() - 1);
                         }
                         if (CollisionManager.CheckPointtoBox(_x, _y, Add_Button.m_rect)) {
-                            if (map.enemies.size() < 5){
+                            if (map.enemies.size() < 6){
                                 if(map.enemies.size()==0)
-                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_1), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_1), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
                                 else if(map.enemies.size()==1)
-                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_2), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_2), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
                                 else if(map.enemies.size()==2)
-                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_3), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_3), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
                                 else if(map.enemies.size()==3)
-                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_4), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_4), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
                                 else if(map.enemies.size()==4)
-                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enermy_5), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_5), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
+                                else if(map.enemies.size()==5)
+                                    map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemy_6), AppManager.getInstance().size.x / 2, AppManager.getInstance().size.y / 2, map.tile_size / 2));
                                 map.enemies.get(map.enemies.size()-1).tile_pos(3,5,SAVE_TP);
 
                             }
