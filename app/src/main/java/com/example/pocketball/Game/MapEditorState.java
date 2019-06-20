@@ -67,7 +67,7 @@ public class MapEditorState implements IState {
         Save_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.savebuttonsample),map.tile_size,map.tile_size);
         Reset_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.resetbuttonsample),map.tile_size,map.tile_size);
         Tile_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.tile),map.tile_size,map.tile_size);
-        Wall_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.wallsample),map.tile_size,map.tile_size);
+        Wall_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.wall2),map.tile_size,map.tile_size);
         Player_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.playersample),map.tile_size,map.tile_size);
         Enemy_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.enemysample),map.tile_size,map.tile_size);
         Life_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.lifebutton),map.tile_size,map.tile_size);
@@ -148,6 +148,7 @@ public class MapEditorState implements IState {
             enemy_move=false;
             enemy_num= -1;
             player_move=false;
+            return true;
         }
         if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)){
             AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
@@ -329,40 +330,42 @@ public class MapEditorState implements IState {
                     }
                 break;
             case enemybutton:
-                if(enemy_move && enemy_num!= -1){
+                if(!enemy_move){
+                    if(event.getAction()==event.ACTION_DOWN) {
+                        for (int i = 0; i < map.enemies.size(); i++) {
+                            if (CollisionManager.CheckPointtoBox(_x, _y, map.enemies.get(i).m_rect)) {
+                                enemy_move = true;
+                                enemy_num = i;
+                                break;
+                            } else {
+                                enemy_move = false;
+                                enemy_num = -1;
+
+                            }
+                        }
+                    }
+                }
+                else {
                     if(event.getAction()==event.ACTION_MOVE){
-                    for (int i = 0; i < TILE_HEIGHT; i++)
-                        for (int j = 0; j < TILE_WIDTH; j++) {
-                            if(CollisionManager.CheckPointtoBox(_x,_y,map.tiles[i][j].m_rect)){
-                                map.enemies.get(enemy_num).SetPosition(map.tiles[i][j].m_rect.centerX(),map.tiles[i][j].m_rect.centerY());
-                                map.enemies.get(enemy_num).tile_pos(i,j,SAVE_T);
-                                break;
+                        for (int i = 0; i < TILE_HEIGHT; i++)
+                            for (int j = 0; j < TILE_WIDTH; j++) {
+                                if(CollisionManager.CheckPointtoBox(_x,_y,map.tiles[i][j].m_rect)){
+                                    map.enemies.get(enemy_num).SetPosition(map.tiles[i][j].m_rect.centerX(),map.tiles[i][j].m_rect.centerY());
+                                    map.enemies.get(enemy_num).tile_pos(i,j,SAVE_T);
+                                    break;
+                                }
                             }
-                        }
 
-                    for (int i = 0; i < TILE_HEIGHT+1; i++)
-                        for (int j = 0; j < TILE_WIDTH+1; j++) {
-                            if(CollisionManager.CheckPointtoBox(_x,_y,map.touch_point[i][j])){
-                                map.enemies.get(enemy_num).SetPosition(map.touch_point[i][j].centerX(),map.touch_point[i][j].centerY());
-                                map.enemies.get(enemy_num).tile_pos(i,j,SAVE_TP);
-                                break;
+                        for (int i = 0; i < TILE_HEIGHT+1; i++)
+                            for (int j = 0; j < TILE_WIDTH+1; j++) {
+                                if(CollisionManager.CheckPointtoBox(_x,_y,map.touch_point[i][j])){
+                                    map.enemies.get(enemy_num).SetPosition(map.touch_point[i][j].centerX(),map.touch_point[i][j].centerY());
+                                    map.enemies.get(enemy_num).tile_pos(i,j,SAVE_TP);
+                                    break;
+                                }
                             }
-                        }
                     }
-                        return true;
-                }else {
-                    for (int i = 0; i < map.enemies.size(); i++) {
-                        if (CollisionManager.CheckPointtoBox(_x, _y, map.enemies.get(i).m_rect)) {
-                            enemy_move = true;
-                            enemy_num = i;
-                           break;
-                        }
-                        else {
-                            enemy_move = false;
-                            enemy_num = -1;
-
-                        }
-                    }
+                    return true;
                 }
                     if(System.currentTimeMillis() - m_LastTouch>250) {
                         m_LastTouch = System.currentTimeMillis();

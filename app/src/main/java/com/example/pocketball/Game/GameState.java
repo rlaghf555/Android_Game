@@ -33,7 +33,7 @@ public class GameState implements IState {
 
     private boolean Stage_clear_flag = false;
     private boolean Stage_fail_flag = false;
-
+    private String[] array;
     @Override
     public void Init() {
         if(!SoundManager.getInstance().m_Background.isPlaying())
@@ -63,7 +63,7 @@ public class GameState implements IState {
             byte[] data = new byte[fis.available()];
             while (fis.read(data) != -1) {;}
             s = new String(data);
-            String[] array = s.split(" ");
+            array = s.split(" ");
             int array_index =0;
             int save_i = Integer.parseInt(array[array_index++]);
             int save_j = Integer.parseInt(array[array_index++]);
@@ -249,15 +249,11 @@ public class GameState implements IState {
     public boolean onTouchEvent(MotionEvent event) {
         int _x = (int)event.getX();
         int _y = (int)event.getY();
-        if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)){
-            AppManager.getInstance().getGameView().ChangeGameState(new GameLevelState());
-        }
+
 
         if(Stage_clear_flag == true)
             if(CollisionManager.CheckPointtoBox(_x,_y,Stage_clear_button.m_rect)){
-                Stage_clear_flag = false;
-                Stage_fail_flag = false;
-                // 다음스테이지로
+                AppManager.getInstance().getGameView().ChangeGameState(new GameLevelState());
             }
         if(Stage_fail_flag == true)
             if(CollisionManager.CheckPointtoBox(_x,_y,Stage_fail_button.m_rect)){
@@ -268,14 +264,6 @@ public class GameState implements IState {
                 map.player.m_VelX=0; map.player.m_VelY=0;
                 map.player.draw=true;
                 map.player.moving = false;
-                FileInputStream fis = null;
-                try{
-                    fis = AppManager.getInstance().context.openFileInput(stagename);
-                    String s;
-                    byte[] data = new byte[fis.available()];
-                    while (fis.read(data) != -1) {;}
-                    s = new String(data);
-                    String[] array = s.split(" ");
                     int array_index =0;
                     int save_i = Integer.parseInt(array[array_index++]);
                     int save_j = Integer.parseInt(array[array_index++]);
@@ -295,20 +283,13 @@ public class GameState implements IState {
                     int nextindex =0;
                     int walllist_size = Integer.parseInt(array[array_index++]);
                     int tmp_index = array_index;
-                    // for(int i=tmp_index;i<walllist_size+tmp_index;){
-                    //     map.Wall_list.add(new Wall(new Point(Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++])), new Point(Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]))));
-                    //     i+=4;
-                    //     nextindex =array_index+1;
-                    // }
+
                     for(int i=0;i<walllist_size;i++){
                         map.Wall_list.add(new Wall(new Point(Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++])), new Point(Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]))));
                     }
 
                     int enemies_size = Integer.parseInt(array[array_index++]);
-                    //  for(int i=nextindex;i<enemies_size+nextindex;){
-                    //      map.enemies.add(new Ball(AppManager.getInstance().getBitmap(R.drawable.enemysample),Integer.parseInt(array[array_index++]),Integer.parseInt(array[array_index++]),map.tile_size/2));
-                    //      nextindex+=2;
-                    //  }
+
                     for(int i=0;i<enemies_size;i++){
                         int tmp_sf = Integer.parseInt(array[array_index++]);
                         save_i = Integer.parseInt(array[array_index++]);
@@ -344,18 +325,6 @@ public class GameState implements IState {
                         }
                     }
                     life = Integer.parseInt(array[array_index++]);
-                }catch (Exception e){
-                    e.printStackTrace();
-                }
-
-                if(fis != null){
-                    try{
-                        fis.close();
-                    }
-                    catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
                 return true;
             }
 
@@ -398,6 +367,9 @@ public class GameState implements IState {
                     }
                     g_ApplyForceBool = true;
                     return true;
+                }
+                if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)){
+                    AppManager.getInstance().getGameView().ChangeGameState(new GameLevelState());
                 }
             }
 
