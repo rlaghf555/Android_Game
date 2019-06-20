@@ -60,6 +60,15 @@ public class GameLevelState implements IState {
                  bitmap=R.drawable.enemy_5;
              if(i==5)
                  bitmap=R.drawable.enemy_6;
+             if(i==6)
+                 bitmap=R.drawable.enemy_7;
+             if(i==7)
+                 bitmap=R.drawable.enemy_8;
+             if(i==8)
+                 bitmap=R.drawable.enemy_9;
+             if(i==9)
+                 bitmap=R.drawable.player;
+
              MainMap_list.add(new Button(AppManager.getInstance().getBitmap(bitmap),tile_size,tile_size));
              if(i<5)
                 MainMap_list.get(i).SetPosition(AppManager.getInstance().size.x/2 +(tile_size*(i-2))*2, pivotY +tile_size+ (int)(display_sizeY*0.2));
@@ -90,6 +99,14 @@ public class GameLevelState implements IState {
                 bitmap=R.drawable.enemy_5;
             if(i==5)
                 bitmap=R.drawable.enemy_6;
+            if(i==6)
+                bitmap=R.drawable.enemy_7;
+            if(i==7)
+                bitmap=R.drawable.enemy_8;
+            if(i==8)
+                bitmap=R.drawable.enemy_9;
+            if(i==9)
+                bitmap=R.drawable.player;
             if(file.exists() == true){
                 CustomMap_list.add(new Button(AppManager.getInstance().getBitmap(bitmap),tile_size,tile_size));
                 if(i<5)
