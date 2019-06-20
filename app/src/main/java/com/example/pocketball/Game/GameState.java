@@ -261,11 +261,9 @@ public class GameState implements IState {
             }
         if(Stage_fail_flag == true)
             if(CollisionManager.CheckPointtoBox(_x,_y,Stage_fail_button.m_rect)){
-                Stage_clear_flag = false;
-                Stage_fail_flag = false;
+                map.player.m_VelX=0; map.player.m_VelY=0;
                 map.enemies.clear();
                 map.Wall_list.clear();
-                map.player.m_VelX=0; map.player.m_VelY=0;
                 map.player.draw=true;
                 map.player.moving = false;
                     int array_index =0;
@@ -329,6 +327,8 @@ public class GameState implements IState {
                         }
                     }
                     life = Integer.parseInt(array[array_index++]);
+                Stage_clear_flag = false;
+                Stage_fail_flag = false;
                 return true;
             }
         if(map.player.m_VelX > 0.0001 || map.player.m_VelY > 0.0001)
