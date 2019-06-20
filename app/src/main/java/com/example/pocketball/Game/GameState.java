@@ -171,7 +171,8 @@ public class GameState implements IState {
 
         if(g_ApplyForceBool)//ShootPlayer
         {
-            map.player.ApplyForce(deltaX, deltaY, 3.f);
+            if(map.player.m_VelX < 0.01 && map.player.m_VelY < 0.01)
+                map.player.ApplyForce(deltaX, deltaY, 3.f);
             g_ApplyForceBool = false;
         }
 
@@ -247,6 +248,8 @@ public class GameState implements IState {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
+        if(map.player.m_VelX > 0.01 || map.player.m_VelY > 0.01)
+            return true;
         int _x = (int)event.getX();
         int _y = (int)event.getY();
 
@@ -340,17 +343,16 @@ public class GameState implements IState {
             }
 
             if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                if (power.touchevent == true) {
-                    deltaX = (float) map.player.GetX() - (float) _x;
-                    deltaY = (float) map.player.GetY() + 10 - (float) _y;
-                    double radian = Math.atan2(deltaX, deltaY);
-                    float degree = (float) (180 / Math.PI * radian);
-
-                    power.degree = (int) degree;
-                    power.radius = (int) Math.sqrt(Math.pow((float) Math.abs(map.player.GetX() - _x), 2) + Math.pow(Math.abs((float) map.player.GetY() - _y), 2));
-                    if (power.radius > 200) power.radius = 200;
-                    power.SetRadius(power.radius);
-                }
+                    if (power.touchevent == true) {
+                        deltaX = (float) map.player.GetX() - (float) _x;
+                        deltaY = (float) map.player.GetY() + 10 - (float) _y;
+                        double radian = Math.atan2(deltaX, deltaY);
+                        float degree = (float) (180 / Math.PI * radian);
+                        power.degree = (int) degree;
+                        power.radius = (int) Math.sqrt(Math.pow((float) Math.abs(map.player.GetX() - _x), 2) + Math.pow(Math.abs((float) map.player.GetY() - _y), 2));
+                        if (power.radius > 200) power.radius = 200;
+                        power.SetRadius(power.radius);
+                    }
                 return true;
 
             }
