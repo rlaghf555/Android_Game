@@ -248,8 +248,7 @@ public class GameState implements IState {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(map.player.m_VelX > 0.0001 || map.player.m_VelY > 0.0001)
-            return true;
+
         int _x = (int)event.getX();
         int _y = (int)event.getY();
 
@@ -258,6 +257,7 @@ public class GameState implements IState {
             if(CollisionManager.CheckPointtoBox(_x,_y,Stage_clear_button.m_rect)){
                 if(event.getAction() == MotionEvent.ACTION_UP)
                 AppManager.getInstance().getGameView().ChangeGameState(new GameLevelState());
+                return true;
             }
         if(Stage_fail_flag == true)
             if(CollisionManager.CheckPointtoBox(_x,_y,Stage_fail_button.m_rect)){
@@ -331,7 +331,8 @@ public class GameState implements IState {
                     life = Integer.parseInt(array[array_index++]);
                 return true;
             }
-
+        if(map.player.m_VelX > 0.0001 || map.player.m_VelY > 0.0001)
+            return true;
             if (event.getAction() == MotionEvent.ACTION_DOWN) {
                 if (CollisionManager.CheckPointtoBox(_x, _y, map.player.m_rect)) {
                     power.SetPosition(map.player.GetX(), map.player.GetY());
