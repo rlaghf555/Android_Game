@@ -253,10 +253,13 @@ public class GameState implements IState {
 
         if(Stage_clear_flag == true)
             if(CollisionManager.CheckPointtoBox(_x,_y,Stage_clear_button.m_rect)){
+                if(event.getAction() == MotionEvent.ACTION_UP)
                 AppManager.getInstance().getGameView().ChangeGameState(new GameLevelState());
             }
         if(Stage_fail_flag == true)
             if(CollisionManager.CheckPointtoBox(_x,_y,Stage_fail_button.m_rect)){
+                if(event.getAction() != MotionEvent.ACTION_UP)
+                        return true;
                 Stage_clear_flag = false;
                 Stage_fail_flag = false;
                 map.enemies.clear();
