@@ -73,7 +73,7 @@ public class Wall {
         }
         else {
             double M, D;
-            M = (end.y - start.y) / (end.x - start.x);
+            M = ((double)end.y - (double)start.y) / ((double)end.x - (double)start.x);
             D = start.y - M * start.x;
             a = M * M + 1;
             b = 2 * M * (D - B) - 2 * A;

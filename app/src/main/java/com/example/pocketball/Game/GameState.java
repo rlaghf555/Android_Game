@@ -171,7 +171,7 @@ public class GameState implements IState {
 
         if(g_ApplyForceBool)//ShootPlayer
         {
-            if(map.player.m_VelX < 0.01 && map.player.m_VelY < 0.01)
+            if(map.player.m_VelX < 0.0001 && map.player.m_VelY < 0.0001)
                 map.player.ApplyForce(deltaX, deltaY, 3.f);
             g_ApplyForceBool = false;
         }
@@ -248,7 +248,7 @@ public class GameState implements IState {
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        if(map.player.m_VelX > 0.01 || map.player.m_VelY > 0.01)
+        if(map.player.m_VelX > 0.0001 || map.player.m_VelY > 0.0001)
             return true;
         int _x = (int)event.getX();
         int _y = (int)event.getY();
@@ -261,8 +261,6 @@ public class GameState implements IState {
             }
         if(Stage_fail_flag == true)
             if(CollisionManager.CheckPointtoBox(_x,_y,Stage_fail_button.m_rect)){
-                if(event.getAction() != MotionEvent.ACTION_UP)
-                        return true;
                 Stage_clear_flag = false;
                 Stage_fail_flag = false;
                 map.enemies.clear();
@@ -371,6 +369,8 @@ public class GameState implements IState {
                         deltaY = deltaY / (float) len * 300.f;
                     }
                     g_ApplyForceBool = true;
+                    power.radius = 10;
+                    power.SetRadius(power.radius);
                     return true;
                 }
                 if(CollisionManager.CheckPointtoBox(_x,_y,GoBack_Button.m_rect)){
@@ -394,6 +394,7 @@ public class GameState implements IState {
                 {
                     map.player.draw=false;
                     Stage_fail_flag=true;
+                    Stage_clear_flag = false;
                    // AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
                     break;
                 }
@@ -402,8 +403,10 @@ public class GameState implements IState {
                     if(CollisionManager.CheckPointtoBox(map.enemies.get(k).GetX(),map.enemies.get(k).GetY(), map.tiles[i][j].m_rect))//적 사망
                     {
                         map.enemies.remove(map.enemies.get(k));
-                        if(k!=0)
-                            Stage_fail_flag=true;
+                        if(k!=0) {
+                            Stage_fail_flag = true;
+                            Stage_clear_flag = false;
+                        }
                     }
                 }
             }
@@ -413,13 +416,16 @@ public class GameState implements IState {
           // AppManager.getInstance().getGameView().ChangeGameState(new GameMenuState());
            map.player.draw=false;
            Stage_fail_flag=true;
+           Stage_clear_flag = false;
        }
        for(int i = 0; i < map.enemies.size(); ++i)
        {
            if(map.map_rect.left > map.enemies.get(i).GetX() || map.enemies.get(i).GetX() > map.map_rect.right || map.map_rect.top > map.enemies.get(i).GetY() || map.enemies.get(i).GetY() > map.map_rect.bottom) {
                map.enemies.remove(map.enemies.get(i));
-               if(i!=0)
-                   Stage_fail_flag=true;
+               if(i!=0) {
+                   Stage_fail_flag = true;
+                   Stage_clear_flag = false;
+               }
            }
        }
     }
