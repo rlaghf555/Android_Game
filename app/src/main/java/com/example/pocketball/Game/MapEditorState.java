@@ -169,6 +169,8 @@ public class MapEditorState implements IState {
                     else
                         break;
                 }
+                if(fileindex>=10)
+                    return true;
                 FileOutputStream fos = null;
                 try {
                     fos = AppManager.getInstance().context.openFileOutput(filename, Context.MODE_PRIVATE);

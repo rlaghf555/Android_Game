@@ -47,12 +47,24 @@ public class GameLevelState implements IState {
          String s = "Level"+i+".txt";
          File file = new File(AppManager.getInstance().context.getFilesDir(),s);
          if(file.exists() == true){
-
-             MainMap_list.add(new Button(AppManager.getInstance().getBitmap(R.drawable.enemysample),tile_size,tile_size));
+             int bitmap = R.drawable.enemysample;
+             if(i==0)
+                 bitmap=R.drawable.enemy_1;
+             if(i==1)
+                 bitmap=R.drawable.enemy_2;
+             if(i==2)
+                 bitmap=R.drawable.enemy_3;
+             if(i==3)
+                 bitmap=R.drawable.enemy_4;
+             if(i==4)
+                 bitmap=R.drawable.enemy_5;
+             if(i==5)
+                 bitmap=R.drawable.enemy_6;
+             MainMap_list.add(new Button(AppManager.getInstance().getBitmap(bitmap),tile_size,tile_size));
              if(i<5)
-                MainMap_list.get(i).SetPosition(pivotX +tile_size*i, pivotY + (int)(display_sizeY*0.2));
+                MainMap_list.get(i).SetPosition(AppManager.getInstance().size.x/2 +(tile_size*(i-2))*2, pivotY +tile_size+ (int)(display_sizeY*0.2));
              else
-                 MainMap_list.get(i).SetPosition(pivotX +tile_size*(i-5), pivotY +tile_size + (int)(display_sizeY*0.2));
+                 MainMap_list.get(i).SetPosition(AppManager.getInstance().size.x/2 +(tile_size*(i-7))*2, pivotY +tile_size*3 + (int)(display_sizeY*0.2));
              i++;
 
          }
@@ -65,12 +77,25 @@ public class GameLevelState implements IState {
         while(true){
             String s = "custom"+i+".txt";
             File file = new File(AppManager.getInstance().context.getFilesDir(),s);
+            int bitmap = R.drawable.enemysample;
+            if(i==0)
+                bitmap=R.drawable.enemy_1;
+            if(i==1)
+                bitmap=R.drawable.enemy_2;
+            if(i==2)
+                bitmap=R.drawable.enemy_3;
+            if(i==3)
+                bitmap=R.drawable.enemy_4;
+            if(i==4)
+                bitmap=R.drawable.enemy_5;
+            if(i==5)
+                bitmap=R.drawable.enemy_6;
             if(file.exists() == true){
-                CustomMap_list.add(new Button(AppManager.getInstance().getBitmap(R.drawable.enemysample),tile_size,tile_size));
+                CustomMap_list.add(new Button(AppManager.getInstance().getBitmap(bitmap),tile_size,tile_size));
                 if(i<5)
-                  CustomMap_list.get(i).SetPosition(pivotX +tile_size*i, pivotY + (int)(display_sizeY*0.2));
+                  CustomMap_list.get(i).SetPosition(AppManager.getInstance().size.x/2 +(tile_size*(i-2))*2, pivotY +tile_size+ (int)(display_sizeY*0.2));
                 else
-                  CustomMap_list.get(i).SetPosition(pivotX +tile_size*(i-5), pivotY +tile_size + (int)(display_sizeY*0.2));
+                  CustomMap_list.get(i).SetPosition(AppManager.getInstance().size.x/2 +(tile_size*(i-7))*2, pivotY +tile_size*3 + (int)(display_sizeY*0.2));
                 i++;
             }
             else {
