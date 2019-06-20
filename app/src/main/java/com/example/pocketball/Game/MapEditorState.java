@@ -70,7 +70,7 @@ public class MapEditorState implements IState {
         Wall_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.wall2),map.tile_size,map.tile_size);
         Player_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.playersample),map.tile_size,map.tile_size);
         Enemy_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.enemysample),map.tile_size,map.tile_size);
-        Life_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.lifebutton),map.tile_size,map.tile_size);
+        Life_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.heart),map.tile_size,map.tile_size);
         Add_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.plussample),map.tile_size/2,map.tile_size/2);
         Remove_Button = new Button(AppManager.getInstance().getBitmap(R.drawable.gobackbuttonsample),map.tile_size/2,map.tile_size/2);
         Heart = new Button(AppManager.getInstance().getBitmap(R.drawable.heart),map.tile_size/2,map.tile_size/2);
